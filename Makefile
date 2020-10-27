@@ -6,11 +6,11 @@
 #    By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 11:10:51 by jtrancos          #+#    #+#              #
-#    Updated: 2020/10/26 11:55:45 by jtrancos         ###   ########.fr        #
+#    Updated: 2020/10/27 13:26:29 by jtrancos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS		= main.c
+SRCS		= loop_test.c
 OBJS		= ${SRCS:.c=.o}
 NAME		= cub3d
 CC			= cc

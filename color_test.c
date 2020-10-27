@@ -22,7 +22,13 @@ int main(void)
 	int		x, y;
 	void	*mlx;
 	void	*mlx_win;
-	unsigned int rgb = 0x000000;
+	unsigned int r  = 0xBE0032;
+	unsigned int o  = r + 255;
+	unsigned int ye  = 0xFFE900;
+	unsigned int g  = 0x00FF00;
+	unsigned int b  = 0x0000FF;
+	unsigned int b2 = 0x2B3D68;
+	unsigned int p  = 0x7F00FF;
 	t_data	img;
 
 	x = 0;
@@ -38,36 +44,49 @@ int main(void)
 		{
 			if (x < 275)
 			{
-				my_mlx_pixel_put(&img, x, y, rgb);
+				my_mlx_pixel_put(&img, x, y, r);
+				r++;
 			}
 			if (x >= 275 && x < 550)
 			{
-				my_mlx_pixel_put(&img, x, y, rgb);
+				my_mlx_pixel_put(&img, x, y, o);
+				o++;
 			}
 			if (x >= 550 && x < 825)
 			{
-				my_mlx_pixel_put(&img, x, y, rgb);
+				my_mlx_pixel_put(&img, x, y, ye);
+			//	ye++;
 			}
 			if (x >= 825 && x < 1100)
 			{
-				my_mlx_pixel_put(&img, x, y, rgb);
+				my_mlx_pixel_put(&img, x, y, g);
+			//	g++;
 			}
 			if (x >= 1100 && x < 1375)
 			{
-				my_mlx_pixel_put(&img, x, y, rgb);
+				my_mlx_pixel_put(&img, x, y, b);
+				//b++;
 			}
 			if (x >= 1375 && x < 1650)
 			{
-				my_mlx_pixel_put(&img, x, y, rgb);
+				my_mlx_pixel_put(&img, x, y, b2);
+				//b2++;
 			}
 			if (x >= 1650 && x < 1920)
 			{
-				my_mlx_pixel_put(&img, x, y, rgb);
+				my_mlx_pixel_put(&img, x, y, p);
+				//p++;
 			}
 			x++;
 		}
 		y++;
-		rgb += 0x010001;
+		r  = 0xBE0032;
+		o  = 0xFFA500;
+		ye  = 0xFFE900;
+		g  = 0x00FF00;
+		b  = 0x0000FF;
+		b2 = 0x2B3D68;
+		p  = 0x7F00FF;
 	}
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	mlx_loop(mlx);
