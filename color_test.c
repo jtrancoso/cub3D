@@ -23,7 +23,7 @@ int main(void)
 	void	*mlx;
 	void	*mlx_win;
 	unsigned int r  = 0xBE0032;
-	unsigned int o  = r + 255;
+	unsigned int o  = 0xFFA500;
 	unsigned int ye  = 0xFFE900;
 	unsigned int g  = 0x00FF00;
 	unsigned int b  = 0x0000FF;
@@ -55,12 +55,12 @@ int main(void)
 			if (x >= 550 && x < 825)
 			{
 				my_mlx_pixel_put(&img, x, y, ye);
-			//	ye++;
+				ye++;
 			}
 			if (x >= 825 && x < 1100)
 			{
 				my_mlx_pixel_put(&img, x, y, g);
-			//	g++;
+				g++;
 			}
 			if (x >= 1100 && x < 1375)
 			{
@@ -70,12 +70,12 @@ int main(void)
 			if (x >= 1375 && x < 1650)
 			{
 				my_mlx_pixel_put(&img, x, y, b2);
-				//b2++;
+			//	b2++;
 			}
 			if (x >= 1650 && x < 1920)
 			{
 				my_mlx_pixel_put(&img, x, y, p);
-				//p++;
+			//	p++;
 			}
 			x++;
 		}
