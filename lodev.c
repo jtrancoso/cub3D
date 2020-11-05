@@ -98,7 +98,7 @@ int worldmap [mapwidth][mapheight] = {
   {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
   {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
+  {1,0,0,0,0,2,0,2,2,2,0,2,0,0,0,3,0,3,0,3,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -136,6 +136,149 @@ void		ft_put_pixel(t_data *data, int x, int y, int color)
 	data->addr[y * data->width + x] = color;
 }
 
+int move_player(int keycode, t_data *data)
+{
+	float move_speed = 0.5;
+	float rot_speed = 0.5;
+	if (keycode == 13) //forward
+	{
+		if(worldmap[(int)(data->player.x + data->player.dir_x * move_speed)][(int)(data->player.y)] == 0)
+			data->player.x += data->player.dir_x * move_speed;
+		if(worldmap[(int)(data->player.x)][(int)(data->player.y + data->player.dir_y * move_speed)] == 0)
+			data->player.y += data->player.dir_y * move_speed;
+	}
+	if (keycode == 1) //back
+	{
+		if(worldmap[(int)(data->player.x - data->player.dir_x * move_speed)][(int)(data->player.y)] == 0) 
+			data->player.x -= data->player.dir_x * move_speed;
+		if(worldmap[(int)(data->player.x)][(int)(data->player.y - data->player.dir_y * move_speed)] == 0)
+			data->player.y -= data->player.dir_y * move_speed;
+	}
+
+	if (keycode == 2) //right
+	{
+		if(worldmap[(int)(data->player.x + data->player.dir_y * move_speed)][(int)(data->player.y)] == 0) 
+			data->player.x += data->player.dir_y * move_speed;
+		if(worldmap[(int)(data->player.x)][(int)(data->player.y - data->player.dir_x * move_speed)] == 0)
+			data->player.y -= data->player.dir_x * move_speed;
+	}
+	if (keycode == 0) //left
+	{
+		if(worldmap[(int)(data->player.x - data->player.dir_y * move_speed)][(int)(data->player.y)] == 0) 
+			data->player.x -= data->player.dir_y * move_speed;
+		if(worldmap[(int)(data->player.x)][(int)(data->player.y + data->player.dir_x * move_speed)] == 0)
+			data->player.y += data->player.dir_x * move_speed;
+	}
+	/*if (keycode == 123) //left rot
+	{
+		
+	}
+	if (keycode == 124) //right rot
+	{
+		float old_dirx = data->player.dir_x;
+		data->
+
+	}*/
+	return (0);
+}
+
+int raycasting(t_data *data)
+{
+	int x = 0;
+	int color;
+
+	while (x < screenwidth)
+	{
+		data->ray.camera_x = 2 * x / (float)screenwidth - 1;
+		data->ray.dir_x = data->player.dir_x + data->player.plane_x * data->ray.camera_x;
+		data->ray.dir_y = data->player.dir_y + data->player.plane_y * data->ray.camera_x;
+		data->ray.map_x = (int)data->player.x;
+		data->ray.map_y = (int)data->player.y;
+		data->ray.delta_dist_x = data->ray.dir_y == 0 ? 1 : fabs(1 / data->ray.dir_x);
+		data->ray.delta_dist_y = data->ray.dir_x == 0 ? 1 : fabs(1 / data->ray.dir_y);
+		data->ray.hit = 0;
+
+		if (data->ray.dir_x < 0)
+		{
+			data->ray.step_x = -1;
+			data->ray.side_dist_x = (data->player.x - data->ray.map_x) * data->ray.delta_dist_x;
+		}
+		else
+		{
+			data->ray.step_x = 1;
+			data->ray.side_dist_x = (data->ray.map_x + 1 - data->player.x) * data->ray.delta_dist_x;
+		}
+		if (data->ray.dir_y < 0)
+		{
+			data->ray.step_y = -1;
+			data->ray.side_dist_y = (data->player.y - data->ray.map_y) * data->ray.delta_dist_y;
+		}
+		else
+		{
+			data->ray.step_y = 1;
+			data->ray.side_dist_y = (data->ray.map_y + 1 - data->player.y) * data->ray.delta_dist_y;
+		}
+		while (data->ray.hit == 0)
+		{
+			if (data->ray.side_dist_x < data->ray.side_dist_y)
+			{
+				data->ray.side_dist_x += data->ray.delta_dist_x;
+				data->ray.map_x += data->ray.step_x;
+				data->ray.side = 0;
+			}
+			else
+			{
+				data->ray.side_dist_y += data->ray.delta_dist_y;
+				data->ray.map_y += data->ray.step_y;
+				data->ray.side = 1;
+			}
+			if (worldmap[data->ray.map_x][data->ray.map_y] > 0)
+				data->ray.hit = 1;
+		}
+		if (data->ray.side == 0)
+			data->ray.perpwalldist = (data->ray.map_x - data->player.x + (1 - data->ray.step_x) / 2) / data->ray.dir_x;
+		else
+			data->ray.perpwalldist = (data->ray.map_y - data->player.y + (1 - data->ray.step_y) / 2) / data->ray.dir_y;
+		data->map.line_height = (int)(screenheight / data->ray.perpwalldist);
+		data->map.draw_start = -data->map.line_height / 2 + screenheight / 2;
+		if (data->map.draw_start < 0)
+			data->map.draw_start = 0;
+		data->map.draw_end = data->map.line_height / 2 + screenheight / 2;
+		if (data->map.draw_end >= screenheight)
+			data->map.draw_end = screenheight - 1;
+		if (worldmap[data->ray.map_x][data->ray.map_y] == 1)
+			color = 0xFF0000;
+		else if (worldmap[data->ray.map_x][data->ray.map_y] == 2)
+			color = 0x00FF00;
+		else if (worldmap[data->ray.map_x][data->ray.map_y] == 3)
+			color = 0x0000FF;
+		else if (worldmap[data->ray.map_x][data->ray.map_y] == 4)
+			color = 0xFFFFFF;
+		else if (worldmap[data->ray.map_x][data->ray.map_y] == 5)
+			color = 0x00FFFF;
+		if (data->ray.side == 1)
+			color /= 2;
+		int y = 0;
+		while (y < data->map.draw_start)
+		{
+			my_mlx_pixel_put(data, x, y, 0x87ceeb);
+			y++;
+		}
+		while (y < data->map.draw_end)
+		{
+			my_mlx_pixel_put(data, x, y, color);
+			y++;
+		}
+		while (y < screenheight)
+		{
+			my_mlx_pixel_put(data, x, y, 0x595959);
+			y++;
+		}
+		x++;
+	}
+	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
+	return (0);
+}
 
 int main (int argc, char **argv)
 {
@@ -149,96 +292,14 @@ int main (int argc, char **argv)
 	data.player.plane_y= 0.66;
 	data.player.time = 0;
 	data.player.old_time = 0;
-	int x = 0;
-	int color;
-	
+
 	data.mlx = mlx_init();
 	data.win = mlx_new_window(data.mlx, screenwidth, screenheight, "raycaster");
 	data.img = mlx_new_image(data.mlx, screenwidth, screenheight);
 	data.addr = mlx_get_data_addr(data.img, &data.bpp, &data.line_len, &data.endian);
-	while (x < screenwidth)
-	{
-		data.ray.camera_x = 2 * x / (float)screenwidth - 1;
-		data.ray.dir_x = data.player.dir_x + data.player.plane_x * data.ray.camera_x;
-		data.ray.dir_y = data.player.dir_y + data.player.plane_y * data.ray.camera_x;
-		data.ray.map_x = (int)data.player.x;
-		data.ray.map_y = (int)data.player.y;
-		data.ray.delta_dist_x = data.ray.dir_y == 0 ? 1 : fabs(1 / data.ray.dir_x);
-		data.ray.delta_dist_y = data.ray.dir_x == 0 ? 1 : fabs(1 / data.ray.dir_y);
-		data.ray.hit = 0;
 
-		if (data.ray.dir_x < 0)
-		{
-			data.ray.step_x = -1;
-			data.ray.side_dist_x = (data.player.x - data.ray.map_x) * data.ray.delta_dist_x;
-		}
-		else
-		{
-			data.ray.step_x = 1;
-			data.ray.side_dist_x = (data.ray.map_x + 1 - data.player.x) * data.ray.delta_dist_x;
-		}
-		if (data.ray.dir_y < 0)
-		{
-			data.ray.step_y = -1;
-			data.ray.side_dist_y = (data.player.y - data.ray.map_y) * data.ray.delta_dist_y;
-		}
-		else
-		{
-			data.ray.step_y = 1;
-			data.ray.side_dist_y = (data.ray.map_y + 1 - data.player.y) * data.ray.delta_dist_y;
-		}
-		while (data.ray.hit == 0)
-		{
-			if (data.ray.side_dist_x < data.ray.side_dist_y)
-			{
-				data.ray.side_dist_x += data.ray.delta_dist_x;
-				data.ray.map_x += data.ray.step_x;
-				data.ray.side = 0;
-			}
-			else
-			{
-				data.ray.side_dist_y += data.ray.delta_dist_y;
-				data.ray.map_y += data.ray.step_y;
-				data.ray.side = 1;
-			}
-			if (worldmap[data.ray.map_x][data.ray.map_y] > 0)
-				data.ray.hit = 1;
-		}
-		if (data.ray.side == 0)
-			data.ray.perpwalldist = (data.ray.map_x - data.player.x + (1 - data.ray.step_x) / 2) / data.ray.dir_x;
-		else
-			data.ray.perpwalldist = (data.ray.map_y - data.player.y + (1 - data.ray.step_y) / 2) / data.ray.dir_y;
-		data.map.line_height = (int)(screenheight / data.ray.perpwalldist);
-		data.map.draw_start = -data.map.line_height / 2 + screenheight / 2;
-		if (data.map.draw_start < 0)
-			data.map.draw_start = 0;
-		data.map.draw_end = data.map.line_height / 2 + screenheight / 2;
-		if (data.map.draw_end >= screenheight)
-			data.map.draw_end = screenheight - 1;
-		if (worldmap[data.ray.map_x][data.ray.map_y] == 1)
-			color = 0xFF0000;
-		else if (worldmap[data.ray.map_x][data.ray.map_y] == 2)
-			color = 0x00FF00;
-		else if (worldmap[data.ray.map_x][data.ray.map_y] == 3)
-			color = 0x0000FF;
-		else if (worldmap[data.ray.map_x][data.ray.map_y] == 4)
-			color = 0xFFFFFF;
-		else if (worldmap[data.ray.map_x][data.ray.map_y] == 5)
-			color = 0x00FFFF;
-		if (data.ray.side == 1)
-			color /= 2;
-		int y = data.map.draw_start;
-		while (y < data.map.draw_end)
-		{
-			my_mlx_pixel_put(&data, x, y, color);
-			y++;
-			//printf("x: %d\n", x);
-			//printf("y: %d\n", y);
-
-		}
-		x++;
-	}
+	mlx_loop_hook(data.mlx, raycasting, &data);
+	mlx_hook(data.win, 2, 0L, move_player, &data);
 	mlx_key_hook(data.win, ft_escape, &data);
-	mlx_put_image_to_window(data.mlx, data.win, data.img, 0, 0);
 	mlx_loop(data.mlx);
 }
