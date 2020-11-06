@@ -4,8 +4,8 @@
 
 #define mapwidth 24
 #define mapheight 24
-#define screenwidth 640
-#define screenheight 480
+#define screenwidth 1920
+#define screenheight 1080
 
 typedef struct s_player
 {
@@ -94,13 +94,13 @@ int worldmap [mapwidth][mapheight] = {
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,2,0,2,2,2,0,2,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,2,2,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
+  {1,0,0,0,2,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,2,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
+  {1,0,0,0,2,0,2,0,4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,2,0,0,0,0,0,0,2,0,0,0,3,0,3,0,3,0,0,0,1},
+  {1,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,2,2,2,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -138,8 +138,8 @@ void		ft_put_pixel(t_data *data, int x, int y, int color)
 
 int move_player(int keycode, t_data *data)
 {
-	float move_speed = 0.5;
-	float rot_speed = 0.5;
+	float move_speed = 0.4;
+	float rot_speed = 0.2;
 	if (keycode == 13) //forward
 	{
 		if(worldmap[(int)(data->player.x + data->player.dir_x * move_speed)][(int)(data->player.y)] == 0)
@@ -169,16 +169,24 @@ int move_player(int keycode, t_data *data)
 		if(worldmap[(int)(data->player.x)][(int)(data->player.y + data->player.dir_x * move_speed)] == 0)
 			data->player.y += data->player.dir_x * move_speed;
 	}
-	/*if (keycode == 123) //left rot
+	if (keycode == 123) //left rot
 	{
-		
+		float old_dir_x = data->player.dir_x;
+		float old_plane_x = data->player.plane_x;
+		data->player.dir_x = data->player.dir_x * cos(rot_speed) - data->player.dir_y * sin(rot_speed);
+		data->player.dir_y = old_dir_x * sin(rot_speed) + data->player.dir_y * cos(rot_speed);
+		data->player.plane_x = data->player.plane_x * cos(rot_speed) - data->player.plane_y * sin(rot_speed);
+		data->player.plane_y = old_plane_x * sin(rot_speed) + data->player.plane_y * cos(rot_speed);
 	}
 	if (keycode == 124) //right rot
 	{
-		float old_dirx = data->player.dir_x;
-		data->
-
-	}*/
+		float old_dir_x = data->player.dir_x;
+		float old_plane_x = data->player.plane_x;
+		data->player.dir_x = data->player.dir_x * cos(-rot_speed) - data->player.dir_y * sin(-rot_speed);
+		data->player.dir_y = old_dir_x * sin(-rot_speed) + data->player.dir_y * cos(-rot_speed);
+		data->player.plane_x = data->player.plane_x * cos(-rot_speed) - data->player.plane_y * sin(-rot_speed);
+		data->player.plane_y = old_plane_x * sin(-rot_speed) + data->player.plane_y * cos(-rot_speed);
+	}
 	return (0);
 }
 
