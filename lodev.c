@@ -4,6 +4,8 @@
 
 #define mapwidth 24
 #define mapheight 24
+#define textwidth 64
+#define textheight 64
 #define screenwidth 1920
 #define screenheight 1080
 
@@ -23,8 +25,6 @@ typedef struct s_player
 typedef struct	s_map
 {
 	int		line_height;
-	int		draw_start;
-	int		draw_end;
 }				t_map;
 
 /*typedef struct	s_rgb
@@ -50,15 +50,47 @@ typedef struct	s_ray
 	int		step_y;
 	int		hit;
 	int		side;
+	int		line_height;
 
 }				t_ray;
-typedef struct	s_data
+
+typedef struct	s_img
 {
 	void	*img;
 	char	*addr;
 	int		bpp;
 	int		line_len;
 	int		endian;
+}				t_img;
+
+typedef struct	s_texture
+{
+	int		width;
+	int		height;
+	char	*path;
+	t_img	img;
+}				t_texture;
+
+typedef struct	s_textures
+{
+	t_texture	sprite;
+	t_texture	north;
+	t_texture	east;
+	t_texture	south;
+	t_texture	west;
+}				t_textures;
+
+typedef struct s_wall
+{
+	t_texture	texture;
+	int			texture_x;
+	int			x;
+	float			draw_start;
+	float			draw_end;
+}				t_wall;
+
+typedef struct	s_data
+{
 	void	*mlx;
 	void	*win;
 	unsigned int rgb;
@@ -68,6 +100,9 @@ typedef struct	s_data
 	int		width;
 	t_player	player;
 	t_ray		ray;
+	t_img		img;
+	t_wall		wall;
+	t_textures	textures;
 	t_map		map;
 	//t_rgb		rgb;
 	
@@ -90,30 +125,30 @@ int		ft_escape(int keycode, t_data *data)
 }
 
 int worldmap [mapwidth][mapheight] = {
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,2,2,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,2,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,2,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-  {1,0,0,0,2,0,2,0,4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,2,0,0,0,0,0,0,2,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,2,2,2,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+  {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7,7,7,7,7,7},
+  {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+  {4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+  {4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+  {4,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+  {4,0,4,0,0,0,0,5,5,5,5,5,5,5,5,5,7,7,0,7,7,7,7,7},
+  {4,0,5,0,0,0,0,5,0,5,0,5,0,5,0,5,7,0,0,0,7,7,7,1},
+  {4,0,6,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+  {4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,1},
+  {4,0,8,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+  {4,0,0,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,7,7,7,1},
+  {4,0,0,0,0,0,0,5,5,5,5,0,5,5,5,5,7,7,7,7,7,7,7,1},
+  {6,6,6,6,6,6,6,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+  {8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
+  {6,6,6,6,6,6,0,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+  {4,4,4,4,4,4,0,4,4,4,6,0,6,2,2,2,2,2,2,2,3,3,3,3},
+  {4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+  {4,0,0,0,0,0,0,0,0,0,0,0,6,2,0,0,5,0,0,2,0,0,0,2},
+  {4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+  {4,0,6,0,6,0,0,0,0,4,6,0,0,0,0,0,5,0,0,0,0,0,0,2},
+  {4,0,0,5,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+  {4,0,6,0,6,0,0,0,0,4,6,0,6,2,0,0,5,0,0,2,0,0,0,2},
+  {4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+  {4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
 };
 
 /*
@@ -127,13 +162,13 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = data->addr + (y * data->line_len + x * (data->bpp / 8));
+	dst = data->img.addr + (y * data->img.line_len + x * (data->img.bpp / 8));
 	*(unsigned int*)dst = color;
 }
 
 void		ft_put_pixel(t_data *data, int x, int y, int color)
 {
-	data->addr[y * data->width + x] = color;
+	data->img.addr[y * data->width + x] = color;
 }
 
 int move_player(int keycode, t_data *data)
@@ -248,12 +283,12 @@ int raycasting(t_data *data)
 		else
 			data->ray.perpwalldist = (data->ray.map_y - data->player.y + (1 - data->ray.step_y) / 2) / data->ray.dir_y;
 		data->map.line_height = (int)(screenheight / data->ray.perpwalldist);
-		data->map.draw_start = -data->map.line_height / 2 + screenheight / 2;
-		if (data->map.draw_start < 0)
-			data->map.draw_start = 0;
-		data->map.draw_end = data->map.line_height / 2 + screenheight / 2;
-		if (data->map.draw_end >= screenheight)
-			data->map.draw_end = screenheight - 1;
+		data->wall.draw_start = -data->map.line_height / 2 + screenheight / 2;
+		if (data->wall.draw_start < 0)
+			data->wall.draw_start = 0;
+		data->wall.draw_end = data->map.line_height / 2 + screenheight / 2;
+		if (data->wall.draw_end >= screenheight)
+			data->wall.draw_end = screenheight - 1;
 		if (worldmap[data->ray.map_x][data->ray.map_y] == 1)
 			color = 0xFF0000;
 		else if (worldmap[data->ray.map_x][data->ray.map_y] == 2)
@@ -261,18 +296,18 @@ int raycasting(t_data *data)
 		else if (worldmap[data->ray.map_x][data->ray.map_y] == 3)
 			color = 0x0000FF;
 		else if (worldmap[data->ray.map_x][data->ray.map_y] == 4)
-			color = 0xFFFFFF;
+			color = 0xFFFFD0;
 		else if (worldmap[data->ray.map_x][data->ray.map_y] == 5)
 			color = 0x00FFFF;
 		if (data->ray.side == 1)
 			color /= 2;
 		int y = 0;
-		while (y < data->map.draw_start)
+		while (y < data->wall.draw_start)
 		{
 			my_mlx_pixel_put(data, x, y, 0x87ceeb);
 			y++;
 		}
-		while (y < data->map.draw_end)
+		while (y < data->wall.draw_end)
 		{
 			my_mlx_pixel_put(data, x, y, color);
 			y++;
@@ -284,7 +319,7 @@ int raycasting(t_data *data)
 		}
 		x++;
 	}
-	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
+	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
 	return (0);
 }
 
@@ -292,8 +327,8 @@ int main (int argc, char **argv)
 {
 	t_data data;
 	data.width = 640;
-	data.player.x = 22;
-	data.player.y = 12;
+	data.player.x = 10;
+	data.player.y = 5;
 	data.player.dir_x = -1;
 	data.player.dir_y = 0;
 	data.player.plane_x = 0;
@@ -303,8 +338,8 @@ int main (int argc, char **argv)
 
 	data.mlx = mlx_init();
 	data.win = mlx_new_window(data.mlx, screenwidth, screenheight, "raycaster");
-	data.img = mlx_new_image(data.mlx, screenwidth, screenheight);
-	data.addr = mlx_get_data_addr(data.img, &data.bpp, &data.line_len, &data.endian);
+	data.img.img = mlx_new_image(data.mlx, screenwidth, screenheight);
+	data.img.addr = mlx_get_data_addr(data.img.img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 
 	mlx_loop_hook(data.mlx, raycasting, &data);
 	mlx_hook(data.win, 2, 0L, move_player, &data);
