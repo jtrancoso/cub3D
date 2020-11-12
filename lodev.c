@@ -1,11 +1,12 @@
 #include "mlx/mlx.h"
 #include <stdlib.h>
 #include <math.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <unistd.h>
 
 #define mapwidth 24
 #define mapheight 24
-#define textwidth 64
-#define textheight 64
 #define screenwidth 1920
 #define screenheight 1080
 
@@ -22,10 +23,10 @@ typedef struct s_player
 
 }				t_player;
 
-typedef struct	s_map
+/*typedef struct	s_map
 {
-	int		line_height;
-}				t_map;
+	;
+}				t_map;*/
 
 /*typedef struct	s_rgb
 {
@@ -51,13 +52,12 @@ typedef struct	s_ray
 	int		hit;
 	int		side;
 	int		line_height;
-
 }				t_ray;
 
 typedef struct	s_img
 {
 	void	*img;
-	char	*addr;
+	int		*addr;
 	int		bpp;
 	int		line_len;
 	int		endian;
@@ -98,12 +98,13 @@ typedef struct	s_data
 	int		blocky;
 	int		blocklen;
 	int		width;
+	int		height;
 	t_player	player;
 	t_ray		ray;
 	t_img		img;
 	t_wall		wall;
 	t_textures	textures;
-	t_map		map;
+	//t_map		map;
 	//t_rgb		rgb;
 	
 }				t_data;
@@ -125,56 +126,108 @@ int		ft_escape(int keycode, t_data *data)
 }
 
 int worldmap [mapwidth][mapheight] = {
-  {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7,7,7,7,7,7},
-  {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
-  {4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
-  {4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
-  {4,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
-  {4,0,4,0,0,0,0,5,5,5,5,5,5,5,5,5,7,7,0,7,7,7,7,7},
-  {4,0,5,0,0,0,0,5,0,5,0,5,0,5,0,5,7,0,0,0,7,7,7,1},
-  {4,0,6,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
-  {4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,1},
-  {4,0,8,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
-  {4,0,0,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,7,7,7,1},
-  {4,0,0,0,0,0,0,5,5,5,5,0,5,5,5,5,7,7,7,7,7,7,7,1},
-  {6,6,6,6,6,6,6,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
-  {8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
-  {6,6,6,6,6,6,0,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
-  {4,4,4,4,4,4,0,4,4,4,6,0,6,2,2,2,2,2,2,2,3,3,3,3},
-  {4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
-  {4,0,0,0,0,0,0,0,0,0,0,0,6,2,0,0,5,0,0,2,0,0,0,2},
-  {4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
-  {4,0,6,0,6,0,0,0,0,4,6,0,0,0,0,0,5,0,0,0,0,0,0,2},
-  {4,0,0,5,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
-  {4,0,6,0,6,0,0,0,0,4,6,0,6,2,0,0,5,0,0,2,0,0,0,2},
-  {4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+  {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4},
+  {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,4},
+  {4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
+  {4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
+  {4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,4},
+  {4,0,1,0,0,0,0,5,5,5,5,5,5,5,5,5,4,4,0,4,4,4,4,4},
+  {4,0,1,0,0,0,0,5,0,5,0,5,0,5,0,5,4,0,0,0,4,4,4,1},
+  {4,0,4,0,0,0,0,5,0,0,0,0,0,0,0,5,4,0,0,0,0,0,0,4},
+  {4,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,4,1},
+  {4,0,4,0,0,0,0,5,0,0,0,0,0,0,0,5,4,0,0,0,0,0,0,4},
+  {4,0,0,0,0,0,0,5,0,0,0,0,0,0,0,5,4,0,0,0,4,4,4,1},
+  {4,0,0,0,0,0,0,5,5,5,5,0,5,5,5,5,4,4,4,4,4,4,4,1},
+  {4,4,4,4,4,4,4,4,4,4,4,0,4,4,4,4,4,4,4,4,4,4,4,4},
+  {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
+  {4,4,4,4,4,4,0,4,4,4,4,0,4,4,4,4,4,4,4,4,4,4,4,4},
+  {4,4,4,4,4,4,0,4,4,4,4,0,4,2,2,2,2,2,2,2,3,3,3,3},
+  {4,0,0,0,0,0,0,0,0,4,4,0,4,2,0,0,0,0,0,2,0,0,0,2},
+  {4,0,0,0,0,0,0,0,0,0,0,0,4,2,0,0,5,0,0,2,0,0,0,2},
+  {4,0,0,0,0,0,0,0,0,4,4,0,4,2,0,0,0,0,0,2,2,0,2,2},
+  {4,0,4,0,4,0,0,0,0,4,4,0,0,0,0,0,5,0,0,0,0,0,0,2},
+  {4,0,0,5,0,0,0,0,0,4,4,0,4,2,0,0,0,0,0,2,2,0,2,2},
+  {4,0,4,0,4,0,0,0,0,4,4,0,4,2,0,0,5,0,0,2,0,0,0,2},
+  {4,0,0,0,0,0,0,0,0,4,4,0,4,2,0,0,0,0,0,2,0,0,0,2},
   {4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
 };
 
-/*
-** hola
-** esto
-** es
-** estopa 
-*/
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
-	char	*dst;
-
-	dst = data->img.addr + (y * data->img.line_len + x * (data->img.bpp / 8));
-	*(unsigned int*)dst = color;
+	data->img.addr[y * screenwidth + x] = color;
 }
 
-void		ft_put_pixel(t_data *data, int x, int y, int color)
+int		get_texture(t_data *data, t_texture *texture, char *path)
 {
-	data->img.addr[y * data->width + x] = color;
+	int fd;
+
+	if ((fd = open(path, O_RDONLY)) == -1)
+	{
+		printf("hola\n");
+		close(fd);
+		return (0);
+	}
+	texture->img.img = mlx_xpm_file_to_image(data->mlx, path, &texture->width, &texture->height);
+	if (!texture->img.img)
+	{
+		printf("There is something wrong with your texture\n");
+		return (0);
+	}
+	if (!(texture->img.addr = (int *)mlx_get_data_addr(texture->img.img, &texture->img.bpp, &texture->img.line_len, &texture->img.endian)))
+		return (0);
+//	printf("tw: %d, th: %d, img: %p, bpp: %d, linelen: %d, endian: %d\n", texture->width, texture->height, texture->img.img, texture->img.bpp, texture->img.line_len, texture->img.endian);
+	//printf("%x\n", ((unsigned int)data->wall.texture.img.addr[0]));
+	return (1);
+}
+void	put_texture(t_data *data, t_wall wall, t_ray ray, int x)
+{
+	float	step;
+	float	tex_pos;
+	int		tex_y;
+	int		y;
+	unsigned int color;
+	
+	step = 1.0 * wall.texture.height / ray.line_height;
+	//printf("th: %d, lh: %d, ds: %f, step: %f, tex_pos: %f, tex_y: %d, y: %d\n", wall.texture.height, ray.line_height, wall.draw_start, step, tex_pos, tex_y, y);
+	tex_pos = (wall.draw_start - screenheight / 2 + ray.line_height / 2) * step;
+	//printf("th: %d, lh: %d, ds: %f, step: %f, tex_pos: %f, tex_y: %d, y: %d\n", wall.texture.height, ray.line_height, wall.draw_start, step, tex_pos, tex_y, y);
+	y = wall.draw_start;
+	while (y < wall.draw_end)
+	{
+		//printf("th: %d, lh: %d, ds: %f, step: %f, tex_pos: %f, tex_y: %d, y: %d\n", wall.texture.height, ray.line_height, wall.draw_start, step, tex_pos, tex_y, y);
+		tex_y = (int)tex_pos;
+		tex_pos += step;
+		color = ((unsigned int *)wall.texture.img.addr)[wall.texture.width * tex_y + wall.texture_x];
+		//if (data->ray.side == 1 && worldmap[data->ray.map_x][data->ray.map_y] != 4 )
+		//	color /= 2;
+		my_mlx_pixel_put(data, x, y, color);
+		y++;
+	}
+}
+void	draw_texture(t_data *data, t_wall wall, t_ray ray, int x)
+{
+	float	wall_x;
+	int		tex_x;
+
+	if (ray.side == 0)
+		wall_x = data->player.y + ray.perpwalldist * ray.dir_y;
+	else
+		wall_x = data->player.x + ray.perpwalldist * ray.dir_x;
+	wall_x -= floor(wall_x);
+	tex_x = (int)(wall_x * (float)wall.texture.width);
+	if (ray.side == 0 && ray.dir_x > 0)
+		tex_x = wall.texture.width	- tex_x - 1;
+	if (ray.side == 1 && ray.dir_y < 0)
+		tex_x = wall.texture.width - tex_x - 1;
+	wall.texture_x = tex_x;
+	put_texture(data, wall, ray, x);
 }
 
 int move_player(int keycode, t_data *data)
 {
 	float move_speed = 0.4;
-	float rot_speed = 0.2;
+	float rot_speed = 0.1;
 	if (keycode == 13) //forward
 	{
 		if(worldmap[(int)(data->player.x + data->player.dir_x * move_speed)][(int)(data->player.y)] == 0)
@@ -229,6 +282,7 @@ int raycasting(t_data *data)
 {
 	int x = 0;
 	int color;
+	int tex_y;
 
 	while (x < screenwidth)
 	{
@@ -278,40 +332,32 @@ int raycasting(t_data *data)
 			if (worldmap[data->ray.map_x][data->ray.map_y] > 0)
 				data->ray.hit = 1;
 		}
+		//calculate sides
 		if (data->ray.side == 0)
 			data->ray.perpwalldist = (data->ray.map_x - data->player.x + (1 - data->ray.step_x) / 2) / data->ray.dir_x;
 		else
 			data->ray.perpwalldist = (data->ray.map_y - data->player.y + (1 - data->ray.step_y) / 2) / data->ray.dir_y;
-		data->map.line_height = (int)(screenheight / data->ray.perpwalldist);
-		data->wall.draw_start = -data->map.line_height / 2 + screenheight / 2;
+		if (data->ray.side == 0)
+			data->wall.texture = (data->ray.step_x == -1) ? data->textures.east : data->textures.west;
+		else
+			data->wall.texture = (data->ray.step_y == -1) ? data->textures.south : data->textures.north;
+		data->ray.line_height = (int)(screenheight / data->ray.perpwalldist);
+		data->wall.draw_start = -data->ray.line_height / 2 + screenheight / 2;
 		if (data->wall.draw_start < 0)
 			data->wall.draw_start = 0;
-		data->wall.draw_end = data->map.line_height / 2 + screenheight / 2;
+		data->wall.draw_end = data->ray.line_height / 2 + screenheight / 2;
 		if (data->wall.draw_end >= screenheight)
 			data->wall.draw_end = screenheight - 1;
-		if (worldmap[data->ray.map_x][data->ray.map_y] == 1)
-			color = 0xFF0000;
-		else if (worldmap[data->ray.map_x][data->ray.map_y] == 2)
-			color = 0x00FF00;
-		else if (worldmap[data->ray.map_x][data->ray.map_y] == 3)
-			color = 0x0000FF;
-		else if (worldmap[data->ray.map_x][data->ray.map_y] == 4)
-			color = 0xFFFFD0;
-		else if (worldmap[data->ray.map_x][data->ray.map_y] == 5)
-			color = 0x00FFFF;
-		if (data->ray.side == 1)
-			color /= 2;
+
+		//suelo y cielo y textura
 		int y = 0;
 		while (y < data->wall.draw_start)
 		{
-			my_mlx_pixel_put(data, x, y, 0x87ceeb);
+			my_mlx_pixel_put(data, x, y, 0x44ceeb);
 			y++;
 		}
-		while (y < data->wall.draw_end)
-		{
-			my_mlx_pixel_put(data, x, y, color);
-			y++;
-		}
+		draw_texture(data, data->wall, data->ray, x);
+		y = data->wall.draw_end;
 		while (y < screenheight)
 		{
 			my_mlx_pixel_put(data, x, y, 0x595959);
@@ -339,8 +385,11 @@ int main (int argc, char **argv)
 	data.mlx = mlx_init();
 	data.win = mlx_new_window(data.mlx, screenwidth, screenheight, "raycaster");
 	data.img.img = mlx_new_image(data.mlx, screenwidth, screenheight);
-	data.img.addr = mlx_get_data_addr(data.img.img, &data.img.bpp, &data.img.line_len, &data.img.endian);
-
+	data.img.addr = (int *)mlx_get_data_addr(data.img.img, &data.img.bpp, &data.img.line_len, &data.img.endian);
+	get_texture(&data, &data.textures.east, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/eagle.xpm");
+	get_texture(&data, &data.textures.south, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/mossy.xpm");
+	get_texture(&data, &data.textures.west, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/greystone.xpm");
+	get_texture(&data, &data.textures.north, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/bluestone.xpm");	
 	mlx_loop_hook(data.mlx, raycasting, &data);
 	mlx_hook(data.win, 2, 0L, move_player, &data);
 	mlx_key_hook(data.win, ft_escape, &data);
