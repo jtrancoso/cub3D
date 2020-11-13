@@ -7,8 +7,9 @@
 
 #define mapwidth 24
 #define mapheight 24
-#define screenwidth 1920
-#define screenheight 1080
+#define screenwidth 1280
+#define screenheight 720
+#define numsprite 3
 
 typedef struct s_player
 {
@@ -89,6 +90,15 @@ typedef struct s_wall
 	float			draw_end;
 }				t_wall;
 
+typedef struct s_sprite
+{
+	float x;
+	float y;
+	int texture;
+	float dist;
+
+}				t_sprite;
+
 typedef struct	s_data
 {
 	void	*mlx;
@@ -99,15 +109,47 @@ typedef struct	s_data
 	int		blocklen;
 	int		width;
 	int		height;
+	int		sprite_num;
 	t_player	player;
 	t_ray		ray;
 	t_img		img;
 	t_wall		wall;
 	t_textures	textures;
+	t_sprite	*sprite;
 	//t_map		map;
 	//t_rgb		rgb;
 	
 }				t_data;
+
+t_sprite spritemap[numsprite] = {
+	{8.0, 5.0, 9},
+	{10.0, 12.5, 9},
+	{3.5, 20.5, 9},
+};
+
+void	sort_sprites(t_data *vars)
+{
+	int j;
+	int i;
+	t_sprite tmp;
+
+	i = 0;
+	while (i < vars->sprite_num - 1)
+	{
+		j = 0;
+		while (j < vars->sprite_num - i - 1)
+		{
+			if (vars->sprite[j].dist <= vars->sprite[i].dist)
+			{
+				tmp = vars->sprite[j];
+				vars->sprite[j] = vars->sprite[i];
+				vars->sprite[i] = tmp;
+			}
+			j++;
+		}
+		i++;
+	}
+}
 
 int		ft_close(t_data *data)
 {
@@ -126,30 +168,30 @@ int		ft_escape(int keycode, t_data *data)
 }
 
 int worldmap [mapwidth][mapheight] = {
-  {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4},
-  {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,4},
-  {4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
-  {4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
-  {4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,4},
-  {4,0,1,0,0,0,0,5,5,5,5,5,5,5,5,5,4,4,0,4,4,4,4,4},
-  {4,0,1,0,0,0,0,5,0,5,0,5,0,5,0,5,4,0,0,0,4,4,4,1},
-  {4,0,4,0,0,0,0,5,0,0,0,0,0,0,0,5,4,0,0,0,0,0,0,4},
-  {4,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,4,1},
-  {4,0,4,0,0,0,0,5,0,0,0,0,0,0,0,5,4,0,0,0,0,0,0,4},
-  {4,0,0,0,0,0,0,5,0,0,0,0,0,0,0,5,4,0,0,0,4,4,4,1},
-  {4,0,0,0,0,0,0,5,5,5,5,0,5,5,5,5,4,4,4,4,4,4,4,1},
-  {4,4,4,4,4,4,4,4,4,4,4,0,4,4,4,4,4,4,4,4,4,4,4,4},
-  {4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
-  {4,4,4,4,4,4,0,4,4,4,4,0,4,4,4,4,4,4,4,4,4,4,4,4},
-  {4,4,4,4,4,4,0,4,4,4,4,0,4,2,2,2,2,2,2,2,3,3,3,3},
-  {4,0,0,0,0,0,0,0,0,4,4,0,4,2,0,0,0,0,0,2,0,0,0,2},
-  {4,0,0,0,0,0,0,0,0,0,0,0,4,2,0,0,5,0,0,2,0,0,0,2},
-  {4,0,0,0,0,0,0,0,0,4,4,0,4,2,0,0,0,0,0,2,2,0,2,2},
-  {4,0,4,0,4,0,0,0,0,4,4,0,0,0,0,0,5,0,0,0,0,0,0,2},
-  {4,0,0,5,0,0,0,0,0,4,4,0,4,2,0,0,0,0,0,2,2,0,2,2},
-  {4,0,4,0,4,0,0,0,0,4,4,0,4,2,0,0,5,0,0,2,0,0,0,2},
-  {4,0,0,0,0,0,0,0,0,4,4,0,4,2,0,0,0,0,0,2,0,0,0,2},
-  {4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1},
+  {1,0,1,0,0,0,0,1,0,1,0,1,0,1,0,1,1,0,0,0,1,1,1,1},
+  {1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
+  {1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1},
+  {1,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1},
+  {1,0,1,0,1,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,1},
+  {1,0,0,1,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1},
+  {1,0,1,0,1,0,0,0,0,1,1,0,1,1,0,0,1,0,0,1,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,0,0,0,1},
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
 
@@ -199,7 +241,7 @@ void	put_texture(t_data *data, t_wall wall, t_ray ray, int x)
 		tex_y = (int)tex_pos;
 		tex_pos += step;
 		color = ((unsigned int *)wall.texture.img.addr)[wall.texture.width * tex_y + wall.texture_x];
-		//if (data->ray.side == 1 && worldmap[data->ray.map_x][data->ray.map_y] != 4 )
+		//if (data->ray.side == 1 && worldmap[data->ray.map_x][data->ray.map_y] != 1 )
 		//	color /= 2;
 		my_mlx_pixel_put(data, x, y, color);
 		y++;
@@ -227,7 +269,7 @@ void	draw_texture(t_data *data, t_wall wall, t_ray ray, int x)
 int move_player(int keycode, t_data *data)
 {
 	float move_speed = 0.4;
-	float rot_speed = 0.1;
+	float rot_speed = 0.25;
 	if (keycode == 13) //forward
 	{
 		if(worldmap[(int)(data->player.x + data->player.dir_x * move_speed)][(int)(data->player.y)] == 0)
@@ -275,6 +317,7 @@ int move_player(int keycode, t_data *data)
 		data->player.plane_x = data->player.plane_x * cos(-rot_speed) - data->player.plane_y * sin(-rot_speed);
 		data->player.plane_y = old_plane_x * sin(-rot_speed) + data->player.plane_y * cos(-rot_speed);
 	}
+	//printf("x: %f y: %f\n", data->player.x, data->player.y);
 	return (0);
 }
 
@@ -365,6 +408,11 @@ int raycasting(t_data *data)
 		}
 		x++;
 	}
+	// SPRITESS
+	for (int i = 0; i < numsprite; i++)
+	{
+
+	}
 	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
 	return (0);
 }
@@ -389,7 +437,8 @@ int main (int argc, char **argv)
 	get_texture(&data, &data.textures.east, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/eagle.xpm");
 	get_texture(&data, &data.textures.south, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/mossy.xpm");
 	get_texture(&data, &data.textures.west, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/greystone.xpm");
-	get_texture(&data, &data.textures.north, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/bluestone.xpm");	
+	get_texture(&data, &data.textures.north, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/bluestone.xpm");
+	//printf("x: %f y: %f\n", data.player.x, data.player.y);
 	mlx_loop_hook(data.mlx, raycasting, &data);
 	mlx_hook(data.win, 2, 0L, move_player, &data);
 	mlx_key_hook(data.win, ft_escape, &data);
