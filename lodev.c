@@ -92,11 +92,28 @@ typedef struct s_wall
 
 typedef struct s_sprite
 {
-	float x;
-	float y;
-	int texture;
-	float dist;
-
+	float			map_x;
+	float			map_y;
+	unsigned int	color;
+	float			dist;
+	float			calc_x;
+	float			calc_y;
+	float			inv_det;
+	float			trans_x;
+	float			trans_y;
+	int				spritescreen_x;
+	int				sprite_h;
+	int				sprite_w;
+	int				drawstart_x;
+	int				drawstart_y;
+	int				drawend_x;
+	int				drawend_y;
+	int				tex_x;
+	int				tex_y;
+	int				d;
+	int				sprite_order[numsprite];
+	float			sprite_dist[numsprite];
+	//float	zbuffer[screenwidth];
 }				t_sprite;
 
 typedef struct	s_data
@@ -110,6 +127,7 @@ typedef struct	s_data
 	int		width;
 	int		height;
 	int		sprite_num;
+	float	zbuffer[screenwidth];
 	t_player	player;
 	t_ray		ray;
 	t_img		img;
@@ -118,13 +136,12 @@ typedef struct	s_data
 	t_sprite	*sprite;
 	//t_map		map;
 	//t_rgb		rgb;
-	
 }				t_data;
 
 t_sprite spritemap[numsprite] = {
-	{8.0, 5.0, 9},
-	{10.0, 12.5, 9},
-	{3.5, 20.5, 9},
+	{8.5, 7.0},
+	{10.5, 7.0},
+	{6.5, 7.0},
 };
 
 void	sort_sprites(t_data *vars)
@@ -134,16 +151,16 @@ void	sort_sprites(t_data *vars)
 	t_sprite tmp;
 
 	i = 0;
-	while (i < vars->sprite_num - 1)
+	while (i < numsprite - 1)
 	{
 		j = 0;
-		while (j < vars->sprite_num - i - 1)
+		while (j < numsprite - i - 1)
 		{
-			if (vars->sprite[j].dist <= vars->sprite[i].dist)
+			if (vars->sprite[j].dist <= vars->sprite[j + 1].dist)
 			{
 				tmp = vars->sprite[j];
-				vars->sprite[j] = vars->sprite[i];
-				vars->sprite[i] = tmp;
+				vars->sprite[j] = vars->sprite[j + 1];
+				vars->sprite[j + 1] = tmp;
 			}
 			j++;
 		}
@@ -167,30 +184,36 @@ int		ft_escape(int keycode, t_data *data)
 	return(0);
 }
 
+/*
+** comentario
+** valido
+**
+*/
+
 int worldmap [mapwidth][mapheight] = {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-  {1,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1},
-  {1,0,1,0,0,0,0,1,0,1,0,1,0,1,0,1,1,0,0,0,1,1,1,1},
-  {1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
-  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-  {1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1},
-  {1,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1},
-  {1,0,1,0,1,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,1},
-  {1,0,0,1,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1},
-  {1,0,1,0,1,0,0,0,0,1,1,0,1,1,0,0,1,0,0,1,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
@@ -268,8 +291,8 @@ void	draw_texture(t_data *data, t_wall wall, t_ray ray, int x)
 
 int move_player(int keycode, t_data *data)
 {
-	float move_speed = 0.4;
-	float rot_speed = 0.25;
+	float move_speed = 0.3;
+	float rot_speed = 0.2;
 	if (keycode == 13) //forward
 	{
 		if(worldmap[(int)(data->player.x + data->player.dir_x * move_speed)][(int)(data->player.y)] == 0)
@@ -326,6 +349,8 @@ int raycasting(t_data *data)
 	int x = 0;
 	int color;
 	int tex_y;
+	int i = 0;
+	
 
 	while (x < screenwidth)
 	{
@@ -406,12 +431,56 @@ int raycasting(t_data *data)
 			my_mlx_pixel_put(data, x, y, 0x595959);
 			y++;
 		}
+		data->zbuffer[x] = data->ray.perpwalldist;
 		x++;
 	}
 	// SPRITESS
+	if (!(data->sprite = malloc(sizeof(t_sprite) * numsprite)))
+		return (0);
+	while (i < numsprite)
+	{
+		data->sprite[i].dist = ((data->player.x - spritemap[i].map_x) * (data->player.x - spritemap[i].map_x) + (data->player.y - spritemap[i].map_y) * (data->player.y - spritemap[i].map_y));
+		printf("sprite%d x: %f y: %f playerx: %f playery: %f dist: %f\n", i, spritemap[i].map_x, spritemap[i].map_y, data->player.x, data->player.y, data->sprite[i].dist);
+		i++;
+	}
+	sort_sprites(data);
 	for (int i = 0; i < numsprite; i++)
 	{
-
+		data->sprite[i].calc_x = spritemap[i].map_x - data->player.x;
+		data->sprite[i].calc_y = spritemap[i].map_y - data->player.y;
+		data->sprite[i].inv_det = 1.0 / (data->player.plane_x * data->player.dir_y - data->player.dir_x * data->player.plane_y);
+		data->sprite[i].trans_x = data->sprite[i].inv_det * (data->player.dir_y * data->sprite[i].calc_x - data->player.dir_x * data->sprite[i].calc_y);
+		data->sprite[i].trans_y = data->sprite[i].inv_det * (-data->player.plane_y * data->sprite[i].calc_x - data->player.plane_x * data->sprite[i].calc_y);
+		data->sprite[i].spritescreen_x = (int)((screenwidth / 2) * (1 + data->sprite[i].trans_x / data->sprite[i].trans_y));
+		data->sprite[i].sprite_h = abs((int)(screenheight / data->sprite[i].trans_y));
+		data->sprite[i].drawstart_y = -data->sprite[i].sprite_h / 2 + screenheight / 2;
+		if (data->sprite[i].drawstart_y < 0)
+			data->sprite[i].drawstart_y = 0;
+		data->sprite[i].drawend_y = data->sprite[i].sprite_h / 2 + screenheight / 2;
+		if (data->sprite[i].drawend_y >= screenheight)
+			data->sprite[i].drawend_y = screenheight - 1;
+		data->sprite[i].sprite_w = abs((int)(screenheight / (data->sprite[i].trans_y)));
+		data->sprite[i].drawstart_x = -data->sprite[i].sprite_w / 2 + data->sprite[i].spritescreen_x;
+		if (data->sprite[i].drawstart_x < 0)
+			data->sprite[i].drawstart_x = 0;
+		data->sprite[i].drawend_x = data->sprite[i].sprite_w / 2 + data->sprite[i].spritescreen_x;
+		if (data->sprite[i].drawend_x >= screenwidth)
+			data->sprite[i].drawend_x = screenwidth - 1;	
+		for (int stripe = data->sprite[i].drawstart_x; stripe < data->sprite[i].drawend_x; stripe++)
+		{
+			data->sprite[i].tex_x = (int)(256 * (stripe - (-data->sprite[i].sprite_w / 2 + data->sprite[i].spritescreen_x)) * data->textures.sprite.width / data->sprite[i].sprite_w) / 256;
+			if (data->sprite[i].trans_y > 0 && stripe > 0 && stripe < screenwidth && data->sprite[i].trans_y < data->zbuffer[stripe])
+			{
+				for (int y = data->sprite[i].drawstart_y; y < data->sprite[i].drawend_y; y++)
+				{
+					data->sprite[i].d = (y) * 256 - screenheight * 128 + data->sprite[i].sprite_h * 128;
+					data->sprite[i].tex_y = ((data->sprite[i].d * data->textures.sprite.height) / data->sprite[i].sprite_h) / 256;
+					data->sprite[i].color = ((unsigned int*)data->textures.sprite.img.addr)[data->textures.sprite.width * data->sprite[i].tex_y + data->sprite[i].tex_x];
+					if ((data->sprite[i].color & 0x00FFFFFF) != 0)
+						my_mlx_pixel_put(data, stripe, y, data->sprite[i].color);
+				}
+			}
+		}
 	}
 	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
 	return (0);
@@ -421,8 +490,8 @@ int main (int argc, char **argv)
 {
 	t_data data;
 	data.width = 640;
-	data.player.x = 10;
-	data.player.y = 5;
+	data.player.x = 8;
+	data.player.y = 6;
 	data.player.dir_x = -1;
 	data.player.dir_y = 0;
 	data.player.plane_x = 0;
@@ -438,6 +507,7 @@ int main (int argc, char **argv)
 	get_texture(&data, &data.textures.south, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/mossy.xpm");
 	get_texture(&data, &data.textures.west, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/greystone.xpm");
 	get_texture(&data, &data.textures.north, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/bluestone.xpm");
+	get_texture(&data, &data.textures.sprite, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/barrel.xpm");
 	//printf("x: %f y: %f\n", data.player.x, data.player.y);
 	mlx_loop_hook(data.mlx, raycasting, &data);
 	mlx_hook(data.win, 2, 0L, move_player, &data);
