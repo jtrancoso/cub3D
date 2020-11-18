@@ -6,11 +6,12 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/11/18 14:09:13 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/11/18 17:35:57 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mlx/mlx.h"
+#include "mlx_linux/mlx.h"
 #include <stdlib.h>
 #include <math.h>
 #include <fcntl.h>

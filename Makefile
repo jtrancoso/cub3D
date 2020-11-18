@@ -6,27 +6,31 @@
 #    By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 11:10:51 by jtrancos          #+#    #+#              #
-#    Updated: 2020/11/18 10:26:18 by jtrancos         ###   ########.fr        #
+#    Updated: 2020/11/18 18:27:04 by jtrancos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS		= cub3d.c
 OBJS		= ${SRCS:.c=.o}
 NAME		= cub3D
-CC			= cc
+CC			= gcc
 RM			= rm -f
 CFLAGS		= #-Wall -Werror -Wextra
-FRAMEWORK	= -lz -L . -lmlx -framework OpenGL -framework AppKit
+FRAMEWORK	= -lmlx -lm -lbsd -lXext -lX11
+LIBS		= -Lmlx_linux
+#-lz -L . -lmlx -framework OpenGL -framework AppKit
 
 .c.o:
-			${CC} ${CFLAGS} -g -c $< -o ${<:.c=.o}
+			#IOS${CC} ${CFLAGS} -g -c $< -o ${<:.c=.o}
+			gcc -o $@ -c $< $(CFLAGS)
 
 ${NAME}:	${OBJS}
-			${MAKE} -C ./mlx
+			${MAKE} -C ./mlx_linux
 			#${MAKE} -C ./libft
 			#mv ./minilibx/libmlx.a .
 			#mv ./libft/libft.a .
-			${CC} -fsanitize=address -g -o ${NAME} ${OBJS} ${FRAMEWORK}
+			#IOS ${CC} -fsanitize=address -g -o ${NAME} ${OBJS} ${FRAMEWORK}
+			${CC} -fsanitize=address ${LIBS} -o $(NAME) ${OBJS} ${FRAMEWORK} 
 
 all:		${NAME}
 
