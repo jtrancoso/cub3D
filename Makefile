@@ -6,13 +6,13 @@
 #    By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 11:10:51 by jtrancos          #+#    #+#              #
-#    Updated: 2020/11/17 11:39:16 by jtrancos         ###   ########.fr        #
+#    Updated: 2020/11/18 10:26:18 by jtrancos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS		= lodev.c
+SRCS		= cub3d.c
 OBJS		= ${SRCS:.c=.o}
-NAME		= cub3d
+NAME		= cub3D
 CC			= cc
 RM			= rm -f
 CFLAGS		= #-Wall -Werror -Wextra
