@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/11/18 17:35:57 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/11/19 11:54:42 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -531,7 +531,9 @@ int main (int argc, char **argv)
 	get_texture(&data, &data.textures.sprite, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/barrel.xpm");
 	//printf("x: %f y: %f\n", data.player.x, data.player.y);
 	mlx_loop_hook(data.mlx, raycasting, &data);
-	mlx_hook(data.win, 2, 0L, move_player, &data);
+	mlx_hook(data.win, 2, 1L<<0L, move_player, &data);
+	//mlx_hook(data.win, 2, 0L, move_player, &data);
+	mlx_hook(data.win, 17, 0L, ft_close, &data);
 	mlx_key_hook(data.win, ft_escape, &data);
 	mlx_loop(data.mlx);
 }
