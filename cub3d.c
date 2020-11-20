@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/11/19 11:54:42 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/11/20 13:13:35 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,18 @@
 #define screenheight 720
 #define numsprite 3
 
+
+typedef struct s_keys
+{
+	int		w;
+	int		a;
+	int		s;
+	int		d;
+	int		left;
+	int		right;
+	int		esc;
+}				t_keys;
+
 typedef struct s_player
 {
 	float	x;
@@ -32,6 +44,9 @@ typedef struct s_player
 	float	dir_y;
 	float	plane_x;
 	float	plane_y;
+	float	rotation;
+	float	speed;
+	t_keys	keys;
 
 }				t_player;
 
@@ -299,59 +314,116 @@ void	draw_texture(t_data *data, t_wall wall, t_ray ray, int x)
 	put_texture(data, wall, ray, x);
 }
 
-int move_player(int keycode, t_data *data)
+int press_key(int keycode, t_data * data)
 {
-	float move_speed = 0.3;
-	float rot_speed = 0.2;
-	if (keycode == 13) //forward
-	{
-		if(worldmap[(int)(data->player.x + data->player.dir_x * move_speed)][(int)(data->player.y)] == 0)
-			data->player.x += data->player.dir_x * move_speed;
-		if(worldmap[(int)(data->player.x)][(int)(data->player.y + data->player.dir_y * move_speed)] == 0)
-			data->player.y += data->player.dir_y * move_speed;
-	}
-	if (keycode == 1) //back
-	{
-		if(worldmap[(int)(data->player.x - data->player.dir_x * move_speed)][(int)(data->player.y)] == 0) 
-			data->player.x -= data->player.dir_x * move_speed;
-		if(worldmap[(int)(data->player.x)][(int)(data->player.y - data->player.dir_y * move_speed)] == 0)
-			data->player.y -= data->player.dir_y * move_speed;
-	}
+	if (keycode == 13)
+		data->player.keys.w = 1;
+	else if (keycode == 0)
+		data->player.keys.a = 1;
+	else if (keycode == 1)
+		data->player.keys.s = 1;
+	else if (keycode == 2)
+		data->player.keys.d = 1;
+	else if (keycode == 123)
+		data->player.keys.left = 1;
+	else if (keycode == 124)
+		data->player.keys.right = 1;
+	return (1);
+}
 
-	if (keycode == 2) //right
+int release_key(int keycode, t_data *data)
+{
+	if (keycode == 53)
+		ft_close(data);
+	else if (keycode == 13)
+		data->player.keys.w = 0;
+	else if (keycode == 0)
+		data->player.keys.a = 0;
+	else if (keycode == 1)
+		data->player.keys.s = 0;
+	else if (keycode == 2)
+		data->player.keys.d = 0;
+	else if (keycode == 123)
+		data->player.keys.left = 0;
+	else if (keycode == 124)
+		data->player.keys.right = 0;
+	return (1);
+	
+}
+
+void	move_front_back(t_data *data)
+{
+	if (data->player.keys.w == 1) //forward
 	{
-		if(worldmap[(int)(data->player.x + data->player.dir_y * move_speed)][(int)(data->player.y)] == 0) 
-			data->player.x += data->player.dir_y * move_speed;
-		if(worldmap[(int)(data->player.x)][(int)(data->player.y - data->player.dir_x * move_speed)] == 0)
-			data->player.y -= data->player.dir_x * move_speed;
+		if(worldmap[(int)(data->player.x + data->player.dir_x * data->player.rotation)][(int)(data->player.y)] == 0)
+			data->player.x += data->player.dir_x * data->player.rotation;
+		if(worldmap[(int)(data->player.x)][(int)(data->player.y + data->player.dir_y * data->player.rotation)] == 0)
+			data->player.y += data->player.dir_y * data->player.rotation;
 	}
-	if (keycode == 0) //left
+	if (data->player.keys.s == 1) //back
 	{
-		if(worldmap[(int)(data->player.x - data->player.dir_y * move_speed)][(int)(data->player.y)] == 0) 
-			data->player.x -= data->player.dir_y * move_speed;
-		if(worldmap[(int)(data->player.x)][(int)(data->player.y + data->player.dir_x * move_speed)] == 0)
-			data->player.y += data->player.dir_x * move_speed;
+		if(worldmap[(int)(data->player.x - data->player.dir_x * data->player.rotation)][(int)(data->player.y)] == 0) 
+			data->player.x -= data->player.dir_x * data->player.rotation;
+		if(worldmap[(int)(data->player.x)][(int)(data->player.y - data->player.dir_y * data->player.rotation)] == 0)
+			data->player.y -= data->player.dir_y * data->player.rotation;
 	}
-	if (keycode == 124) //right rot
+}
+
+void move_strafe(t_data *data)
+{
+	if (data->player.keys.d == 1) //right
 	{
-		float old_dir_x = data->player.dir_x;
-		float old_plane_x = data->player.plane_x;
-		data->player.dir_x = data->player.dir_x * cos(-rot_speed) - data->player.dir_y * sin(-rot_speed);
-		data->player.dir_y = old_dir_x * sin(-rot_speed) + data->player.dir_y * cos(-rot_speed);
-		data->player.plane_x = data->player.plane_x * cos(-rot_speed) - data->player.plane_y * sin(-rot_speed);
-		data->player.plane_y = old_plane_x * sin(-rot_speed) + data->player.plane_y * cos(-rot_speed);
+		if(worldmap[(int)(data->player.x + data->player.dir_y * data->player.rotation)][(int)(data->player.y)] == 0) 
+			data->player.x += data->player.dir_y * data->player.rotation;
+		if(worldmap[(int)(data->player.x)][(int)(data->player.y - data->player.dir_x * data->player.rotation)] == 0)
+			data->player.y -= data->player.dir_x * data->player.rotation;
 	}
-	if (keycode == 123) //left rot
+	if (data->player.keys.a == 1) //left
 	{
-		float old_dir_x = data->player.dir_x;
-		float old_plane_x = data->player.plane_x;
-		data->player.dir_x = data->player.dir_x * cos(rot_speed) - data->player.dir_y * sin(rot_speed);
-		data->player.dir_y = old_dir_x * sin(rot_speed) + data->player.dir_y * cos(rot_speed);
-		data->player.plane_x = data->player.plane_x * cos(rot_speed) - data->player.plane_y * sin(rot_speed);
-		data->player.plane_y = old_plane_x * sin(rot_speed) + data->player.plane_y * cos(rot_speed);
+		if(worldmap[(int)(data->player.x - data->player.dir_y * data->player.rotation)][(int)(data->player.y)] == 0) 
+			data->player.x -= data->player.dir_y * data->player.rotation;
+		if(worldmap[(int)(data->player.x)][(int)(data->player.y + data->player.dir_x * data->player.rotation)] == 0)
+			data->player.y += data->player.dir_x * data->player.rotation;
 	}
-	//printf("x: %f y: %f\n", data->player.x, data->player.y);
-	return (0);
+}
+
+void	rotation_right(t_data *data)
+{
+	float old_dir_x;
+	float old_plane_x; 
+	
+	old_dir_x = data->player.dir_x;
+	old_plane_x = data->player.plane_x;
+	data->player.dir_x = data->player.dir_x * cos(-data->player.rotation) - data->player.dir_y * sin(-data->player.rotation);
+	data->player.dir_y = old_dir_x * sin(-data->player.rotation) + data->player.dir_y * cos(-data->player.rotation);
+	data->player.plane_x = data->player.plane_x * cos(-data->player.rotation) - data->player.plane_y * sin(-data->player.rotation);
+	data->player.plane_y = old_plane_x * sin(-data->player.rotation) + data->player.plane_y * cos(-data->player.rotation);
+}
+
+void rotation_left(t_data *data)
+{
+	float old_dir_x;
+	float old_plane_x;
+
+	old_dir_x = data->player.dir_x;
+	old_plane_x = data->player.plane_x;
+	data->player.dir_x = data->player.dir_x * cos(data->player.rotation) - data->player.dir_y * sin(data->player.rotation);
+	data->player.dir_y = old_dir_x * sin(data->player.rotation) + data->player.dir_y * cos(data->player.rotation);
+	data->player.plane_x = data->player.plane_x * cos(data->player.rotation) - data->player.plane_y * sin(data->player.rotation);
+	data->player.plane_y = old_plane_x * sin(data->player.rotation) + data->player.plane_y * cos(data->player.rotation);
+}
+
+void move_player(t_data *data)
+{
+	data->player.speed = 0.2;
+	data->player.rotation = 0.05;
+
+	move_strafe(data);
+	move_front_back(data);
+	if (data->player.keys.right == 1) //right rot
+		rotation_right(data);
+	if (data->player.keys.left == 1) //left rot
+		rotation_left(data);
 }
 
 int raycasting(t_data *data)
@@ -361,7 +433,7 @@ int raycasting(t_data *data)
 	int tex_y;
 	int i = 0;
 	
-
+	move_player(data);
 	while (x < screenwidth)
 	{
 		data->ray.camera_x = 2 * x / (float)screenwidth - 1;
@@ -519,6 +591,12 @@ int main (int argc, char **argv)
 	data.player.dir_y = 0;
 	data.player.plane_x = 0;
 	data.player.plane_y= 0.66;
+	data.player.keys.w = 0;
+	data.player.keys.a = 0;
+	data.player.keys.s = 0;
+	data.player.keys.d = 0;
+	data.player.keys.left = 0;
+	data.player.keys.right = 0;
 
 	data.mlx = mlx_init();
 	data.win = mlx_new_window(data.mlx, screenwidth, screenheight, "raycaster");
@@ -531,9 +609,8 @@ int main (int argc, char **argv)
 	get_texture(&data, &data.textures.sprite, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/barrel.xpm");
 	//printf("x: %f y: %f\n", data.player.x, data.player.y);
 	mlx_loop_hook(data.mlx, raycasting, &data);
-	mlx_hook(data.win, 2, 1L<<0L, move_player, &data);
-	//mlx_hook(data.win, 2, 0L, move_player, &data);
+	mlx_hook(data.win, 02, 1L<<0, press_key, &data);
+	mlx_hook(data.win, 03, 1L<<1, release_key, &data);
 	mlx_hook(data.win, 17, 0L, ft_close, &data);
-	mlx_key_hook(data.win, ft_escape, &data);
 	mlx_loop(data.mlx);
 }
