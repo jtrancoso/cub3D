@@ -6,161 +6,11 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/11/20 13:13:35 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/01 14:13:24 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mlx/mlx.h"
-#include "mlx_linux/mlx.h"
-#include <stdlib.h>
-#include <math.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <unistd.h>
-
-#define mapwidth 24
-#define mapheight 24
-#define screenwidth 1280
-#define screenheight 720
-#define numsprite 3
-
-
-typedef struct s_keys
-{
-	int		w;
-	int		a;
-	int		s;
-	int		d;
-	int		left;
-	int		right;
-	int		esc;
-}				t_keys;
-
-typedef struct s_player
-{
-	float	x;
-	float	y;
-	float	dir_x;
-	float	dir_y;
-	float	plane_x;
-	float	plane_y;
-	float	rotation;
-	float	speed;
-	t_keys	keys;
-
-}				t_player;
-
-/*typedef struct	s_map
-{
-	;
-}				t_map;*/
-
-/*typedef struct	s_rgb
-{
-	int		r;
-	int		g;
-	int		b;
-}				t_rgb;*/
-
-typedef struct	s_ray
-{
-	float	camera_x;
-	float	dir_x;
-	float	dir_y;
-	int		map_x;
-	int		map_y;
-	float	side_dist_x;
-	float	side_dist_y;
-	float	delta_dist_x;
-	float	delta_dist_y;
-	float	perpwalldist;
-	int		step_x;
-	int		step_y;
-	int		hit;
-	int		side;
-	int		line_height;
-}				t_ray;
-
-typedef struct	s_img
-{
-	void	*img;
-	int		*addr;
-	int		bpp;
-	int		line_len;
-	int		endian;
-}				t_img;
-
-typedef struct	s_texture
-{
-	int		width;
-	int		height;
-	char	*path;
-	t_img	img;
-}				t_texture;
-
-typedef struct	s_textures
-{
-	t_texture	sprite;
-	t_texture	north;
-	t_texture	east;
-	t_texture	south;
-	t_texture	west;
-}				t_textures;
-
-typedef struct s_wall
-{
-	t_texture	texture;
-	int			texture_x;
-	int			x;
-	float			draw_start;
-	float			draw_end;
-}				t_wall;
-
-typedef struct s_sprite
-{
-	float			map_x;
-	float			map_y;
-	unsigned int	color;
-	float			dist;
-	float			calc_x;
-	float			calc_y;
-	float			inv_det;
-	float			trans_x;
-	float			trans_y;
-	int				spritescreen_x;
-	int				sprite_h;
-	int				sprite_w;
-	int				drawstart_x;
-	int				drawstart_y;
-	int				drawend_x;
-	int				drawend_y;
-	int				tex_x;
-	int				tex_y;
-	int				d;
-}				t_sprite;
-
-typedef struct	s_data
-{
-	void	*mlx;
-	void	*win;
-	unsigned int rgb;
-	int 	blockx;
-	int		blocky;
-	int		blocklen;
-	int		width;
-	int		height;
-	int		sprite_num;
-	float	zbuffer[screenwidth];
-	t_player	player;
-	t_ray		ray;
-	t_img		img;
-	t_wall		wall;
-	t_textures	textures;
-	t_sprite	*sprite;
-	//t_map		map;
-	//t_rgb		rgb;
-}				t_data;
-
+#include "cub3d.h"
 
 void	sort_sprites(t_data *data)
 {
@@ -185,12 +35,12 @@ void	sort_sprites(t_data *data)
 		}
 		i++;
 	}
-	i = 0;
+	/*i = 0;
 	while (i < numsprite)
 	{
 		printf("sprite%d x: %f y: %f playerx: %f playery: %f planex: %f planey: %f dist: %f\n", i, data->sprite[i].map_x, data->sprite[i].map_y, data->player.x, data->player.y, data->player.plane_x, data->player.plane_y, data->sprite[i].dist);
 		i++;
-	}
+	}*/
 }
 
 int		ft_close(t_data *data)
@@ -584,7 +434,7 @@ int raycasting(t_data *data)
 int main (int argc, char **argv)
 {
 	t_data data;
-	data.width = 640;
+	data.screen_width = 640;
 	data.player.x = 15;
 	data.player.y = 6;
 	data.player.dir_x = -1;
@@ -602,11 +452,11 @@ int main (int argc, char **argv)
 	data.win = mlx_new_window(data.mlx, screenwidth, screenheight, "raycaster");
 	data.img.img = mlx_new_image(data.mlx, screenwidth, screenheight);
 	data.img.addr = (int *)mlx_get_data_addr(data.img.img, &data.img.bpp, &data.img.line_len, &data.img.endian);
-	get_texture(&data, &data.textures.east, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/eagle.xpm");
-	get_texture(&data, &data.textures.south, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/mossy.xpm");
-	get_texture(&data, &data.textures.west, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/greystone.xpm");
-	get_texture(&data, &data.textures.north, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/bluestone.xpm");
-	get_texture(&data, &data.textures.sprite, "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/textures/barrel.xpm");
+	get_texture(&data, &data.textures.east, "./textures/eagle.xpm");
+	get_texture(&data, &data.textures.south, "./textures/mossy.xpm");
+	get_texture(&data, &data.textures.west, "./textures/greystone.xpm");
+	get_texture(&data, &data.textures.north, "./textures/bluestone.xpm");
+	get_texture(&data, &data.textures.sprite, "./textures/barrel.xpm");
 	//printf("x: %f y: %f\n", data.player.x, data.player.y);
 	mlx_loop_hook(data.mlx, raycasting, &data);
 	mlx_hook(data.win, 02, 1L<<0, press_key, &data);

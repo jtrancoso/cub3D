@@ -7,3 +7,4 @@ img_test.c
 loop_test.c
 test.png
 test.xpm
+*.h.gch
