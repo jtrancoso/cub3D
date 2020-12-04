@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 11:27:38 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/02 14:17:37 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/04 11:43:45 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 **
 */
 
-int	check_extension(char *file, char *ext)
+int	check_extension(const char *file, char *ext)
 {
 	size_t	len;
 	size_t	ext_len;
@@ -39,34 +39,28 @@ int	check_extension(char *file, char *ext)
 
 	if (len < ext_len)
 	{
-		write(1, "error mapa\n", 10);
+		write(1, "Error. Invalid file.\n", 21);
 		return (0);
 	}
 	tmp = ft_substr(file, len - ext_len, ext_len);
-	if (ft_strcnmp(tmp, ext, 4) == 0)
+	if (ft_strncmp(tmp, ext, 4) == 0)
 	{
 		free(tmp);
 		return (1);
 	}
+	write(1, "Error. Invalid file.\n", 21);
 	free (tmp);
 	return (0);
 }
 
-int	check_file(t_data *data, char *file, int fd)
+int	check_file(t_data *data, const char *file, int fd)
 {
 	int		ret;
 	char	*line;
 	int		correct_line;
 
-	if (check_extension(file, ".cub") == 0)
-	{
-		write (1, "error mapa\n", 10);
-		return (0);
-	}
-
+	check_extension(file, ".cub");
 	return (0);
-
-
 }
 
 int read_file(t_data *data, const char *file)
@@ -79,6 +73,7 @@ int read_file(t_data *data, const char *file)
 		write(1, "error\n", 6);
 		return (0);
 	}
+	check_file(data, file, fd);
 	return (0);
 	//check_file;
 
