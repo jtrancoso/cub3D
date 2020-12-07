@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 11:27:38 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/04 11:43:45 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/07 13:34:07 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,30 @@
 **
 **
 */
+
+int check_line(t_data *data, char *line)
+{
+	int i;
+
+	i = 0;
+	if (line[i] == '\0')
+	{
+		write (1, "Error. Empty map file.\n", 23);
+		return (1);
+	}
+	while (ft_isspace(line[i]))
+		i++;
+	if (line[i] == '\0')
+	{
+		write (1, "Error. Empty map file.\n", 23);
+		return (1);
+	}
+	if (line[i] == 'R')
+	{
+		parse_resolution(data, line + i);
+	}
+	
+}
 
 int	check_extension(const char *file, char *ext)
 {
@@ -60,6 +84,17 @@ int	check_file(t_data *data, const char *file, int fd)
 	int		correct_line;
 
 	check_extension(file, ".cub");
+	while ((ret = get_next_line(fd, &line)) > 0)
+	{
+		correct_line = check_line(data, line);
+		free(line);
+		if (correct_line == 0)
+			return (0);
+	}
+	correct_line = check_line(data, line);
+	free (line);
+	if (correct_line == 0)
+		return (0);
 	return (0);
 }
 
