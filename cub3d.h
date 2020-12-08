@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 11:43:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/02 12:51:01 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/08 19:17:39 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "mlx/mlx.h"
 #include "mlx_linux/mlx.h"
-#include "/Users/jtrancos/Desktop/Curso/Ejercicios/cub3d/libft/libft.h"
+#include "libft/libft.h"
 #include "./utils/GNL/get_next_line.h"
 #include <stdlib.h>
 #include <math.h>
@@ -26,8 +26,10 @@
 
 #define mapwidth 24
 #define mapheight 24
-#define screenwidth 1280
-#define screenheight 720
+#define MAX_SCREENWIDTH 2560
+#define MAX_SCREENHEIGHT 1440
+#define old_screenwidth 1280
+#define old_screenheight 720
 #define numsprite 3
 
 typedef struct s_keys
@@ -152,8 +154,8 @@ typedef struct	s_data
 	int				blockx;
 	int				blocky;
 	int				blocklen;
-	int				screen_width;
-	int				screen_height;
+	int				screenwidth;
+	int				screenheight;
 	int				map_height;
 	int				map_width;
 	int				sprite_num;

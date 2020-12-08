@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/29 13:35:08 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/11/30 13:05:21 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/07 13:49:44 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include "../../cub3d.h"
 
 int		get_next_line(int fd, char **line);
 #endif
