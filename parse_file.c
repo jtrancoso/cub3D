@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/07 14:41:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/08 19:57:09 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/09 14:16:51 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ int check_line(t_data *data, char *line)
 		write (1, "Error. Empty map file.\n", 23);
 		return (1);
 	}
-	return (0);
 	if (line[i] == 'R')
 		return (parse_resolution(data, line + i));
 	if (ft_strchr("NSEW", line[i]))
 		return (find_texture(data, line + i));
+	return (0);
 }
 
 int	check_extension(const char *file, char *ext)
@@ -121,7 +121,7 @@ int read_file(t_data *data, const char *file)
 {
 	int fd;
 
-	//init_data(data);
+	init_data(data);
 	if ((fd = open(file, O_RDONLY)) == -1)
 	{
 		write(1, "Error. Could not open file.\n", 28);
@@ -133,8 +133,8 @@ int read_file(t_data *data, const char *file)
 
 int	main(int argc, char **argv)
 {
-	t_data *data;
+	t_data data;
 
-	read_file(data, argv[1]);
+	read_file(&data, argv[1]);
 	return (0);
 }

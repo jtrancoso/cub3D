@@ -6,17 +6,17 @@
 #    By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 11:10:51 by jtrancos          #+#    #+#              #
-#    Updated: 2020/12/08 19:57:02 by jtrancos         ###   ########.fr        #
+#    Updated: 2020/12/09 11:44:52 by jtrancos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS		= parse_file.c ./utils/parser_utils.c ./utils/GNL/get_next_line.c
+SRCS		= parse_file.c parse_resolution.c ./utils/parser_utils.c ./utils/GNL/get_next_line.c
 OBJS		= ${SRCS:.c=.o}
 NAME		= cub3D
 CC			= gcc
 RM			= rm -f
 #CFLAGS		= -Werror -Wall -Wextra
-FRAMEWORK	= -lz -L libft/ -lft
+FRAMEWORK	= -lz -L . -lft
 # MINILIB APPLE -L . -lmlx -framework AppKit -framework OpenGL 
 # MINILIB LINUX -lmlx -lm -lbsd -lXext -lX11
 LIBS		= -Lmlx_linux
@@ -32,7 +32,7 @@ ${NAME}:	${OBJS}
 			#${MAKE} -C ./mlx_linux
 			${MAKE} -C ./libft
 			#mv ./mlx/libmlx.a .
-			#mv ./libft/libft.a .
+			mv ./libft/libft.a .
 			${CC} -fsanitize=address -g -o ${NAME} ${OBJS} ${FRAMEWORK}
 			#COMPILAR LINUX ${CC} -fsanitize=address ${LIBS} -o $(NAME) ${OBJS} ${FRAMEWORK}
 

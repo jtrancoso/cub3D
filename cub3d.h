@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 11:43:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/08 19:17:39 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/09 13:01:11 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,12 +154,12 @@ typedef struct	s_data
 	int				blockx;
 	int				blocky;
 	int				blocklen;
-	int				screenwidth;
-	int				screenheight;
+	int				screen_width;
+	int				screen_height;
 	int				map_height;
 	int				map_width;
 	int				sprite_num;
-	float			zbuffer[screenwidth];
+	float			*zbuffer;
 	t_player		player;
 	t_ray			ray;
 	t_img			img;
@@ -172,6 +172,7 @@ typedef struct	s_data
 
 int		ft_isspace(int c);
 void	init_data(t_data *data);
-
+int		empty_line_end(char *line);
+int		parse_resolution(t_data *data, char *line);
 
 #endif

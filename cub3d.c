@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/04 14:38:24 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/09 12:18:07 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ void	sort_sprites(t_data *data)
 		}
 		i++;
 	}
-
-
 	/*i = 0;
 	while (i < numsprite)
 	{
@@ -436,7 +434,7 @@ int raycasting(t_data *data)
 int main (int argc, char **argv)
 {
 	t_data data;
-	data.screen_width = 640;
+	data.screenwidth = 640;
 	data.player.x = 15;
 	data.player.y = 6;
 	data.player.dir_x = -1;

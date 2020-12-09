@@ -14,25 +14,25 @@
 
 void	check_max_resolution(t_data *data)
 {
-	if (data->screenheight > MAX_SCREENHEIGHT)
-		data->screenheight = MAX_SCREENHEIGHT;
-	if (data->screenwidth > MAX_SCREENWIDTH)
-		data->screenwidth = MAX_SCREENWIDTH;
+	if (data->screen_height > MAX_SCREENHEIGHT)
+		data->screen_height = MAX_SCREENHEIGHT;
+	if (data->screen_width > MAX_SCREENWIDTH)
+		data->screen_width = MAX_SCREENWIDTH;
 }
 
 int	parse_resolution(t_data *data, char *line)
 {
 	int i;
 
-	i = 0;
+	i = 1;
 	while (ft_isspace(line[i]))
 		i++;
-	if (!ft_isdigit(line[i]))
+	if (ft_isdigit(line[i]) == 0)
 	{
 		write(1, "Error. Invalid resolution.\n", 27);
 		return (0);
 	}
-	data->screenwidth = ft_atoi(&line[i]);
+	data->screen_width = ft_atoi(&line[i]);
 	while (ft_isdigit(line[i]))
 		i++;
 	while (ft_isspace(line[i]))
@@ -42,8 +42,8 @@ int	parse_resolution(t_data *data, char *line)
 		write(1, "Error. Invalid resolution.\n", 27);
 		return (0);
 	}
-	data->screenheight = ft_atoi(&line[i]);
-	while (ft_idigit(line[i]))
+	data->screen_height = ft_atoi(&line[i]);
+	while (ft_isdigit(line[i]))
 		i++;
 	if (!empty_line_end(&line[i]))
 	{

@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:50:02 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/08 19:22:48 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/09 13:01:00 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ int	empty_line_end(char *line)
 
 void	init_data(t_data *data)
 {
-	data->screenheight = -1;
-	data->screenwidth = -1;
+	data->screen_height = -1;
+	data->screen_width = -1;
 	data->map_height = 0;
 	data->map_width = 0;
 	data->textures.east.height = -1;
