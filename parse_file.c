@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/07 14:41:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/09 14:16:51 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/10 14:26:59 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,13 @@ int check_line(t_data *data, char *line)
 	int i;
 
 	i = 0;
+//	printf("%s\n", &line[i]);
 	if (line[i] == '\0')
-	{
-		write (1, "Error. Empty map file.\n", 23);
 		return (1);
-	}
 	while (ft_isspace(line[i]))
 		i++;
 	if (line[i] == '\0')
-	{
-		write (1, "Error. Empty map file.\n", 23);
 		return (1);
-	}
 	if (line[i] == 'R')
 		return (parse_resolution(data, line + i));
 	if (ft_strchr("NSEW", line[i]))
@@ -127,7 +122,8 @@ int read_file(t_data *data, const char *file)
 		write(1, "Error. Could not open file.\n", 28);
 		return (0);
 	}
-	check_file(data, file, fd);
+	if (!check_file(data, file, fd))
+		return (0);
 	return (0);
 }
 
@@ -136,5 +132,12 @@ int	main(int argc, char **argv)
 	t_data data;
 
 	read_file(&data, argv[1]);
+	printf("%d\n", data.screen_width);
+	printf("%d\n", data.screen_height);
+	printf("%s\n", data.textures.north.path);
+	printf("%s\n", data.textures.south.path);
+	printf("%s\n", data.textures.west.path);
+	printf("%s\n", data.textures.east.path);
+	printf("%s\n", data.textures.sprite.path);
 	return (0);
 }

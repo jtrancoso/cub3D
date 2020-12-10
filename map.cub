@@ -1,5 +1,6 @@
-R 1280 720
-NO ./textures/eagle.xpm
+
+R             1280 720
+NO       ./textures/eagle.xpm
 SO ./textures/mossy.xpm
 WE ./textures/greystone.xpm
 EA ./textures/bluestone.xpm

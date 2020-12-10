@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 11:43:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/09 13:01:11 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/10 12:23:46 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,5 +174,6 @@ int		ft_isspace(int c);
 void	init_data(t_data *data);
 int		empty_line_end(char *line);
 int		parse_resolution(t_data *data, char *line);
+int		parse_texture(t_data *data, int type, char *line);
 
 #endif

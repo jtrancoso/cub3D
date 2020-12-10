@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/09 12:18:07 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/10 14:39:37 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,28 +98,6 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	data->img.addr[y * screenwidth + x] = color;
 }
 
-int		get_texture(t_data *data, t_texture *texture, char *path)
-{
-	int fd;
-
-	if ((fd = open(path, O_RDONLY)) == -1)
-	{
-		printf("hola\n");
-		close(fd);
-		return (0);
-	}
-	texture->img.img = mlx_xpm_file_to_image(data->mlx, path, &texture->width, &texture->height);
-	if (!texture->img.img)
-	{
-		printf("There is something wrong with your texture\n");
-		return (0);
-	}
-	if (!(texture->img.addr = (int *)mlx_get_data_addr(texture->img.img, &texture->img.bpp, &texture->img.line_len, &texture->img.endian)))
-		return (0);
-//	printf("tw: %d, th: %d, img: %p, bpp: %d, linelen: %d, endian: %d\n", texture->width, texture->height, texture->img.img, texture->img.bpp, texture->img.line_len, texture->img.endian);
-	//printf("%x\n", ((unsigned int)data->wall.texture.img.addr[0]));
-	return (1);
-}
 void	put_texture(t_data *data, t_wall wall, t_ray ray, int x)
 {
 	float	step;

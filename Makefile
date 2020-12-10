@@ -6,11 +6,11 @@
 #    By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 11:10:51 by jtrancos          #+#    #+#              #
-#    Updated: 2020/12/09 11:44:52 by jtrancos         ###   ########.fr        #
+#    Updated: 2020/12/10 12:25:56 by jtrancos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS		= parse_file.c parse_resolution.c ./utils/parser_utils.c ./utils/GNL/get_next_line.c
+SRCS		= parse_file.c parse_resolution.c parse_texture.c ./utils/parser_utils.c ./utils/GNL/get_next_line.c
 OBJS		= ${SRCS:.c=.o}
 NAME		= cub3D
 CC			= gcc
