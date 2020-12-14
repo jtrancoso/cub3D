@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_texture.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/11 13:19:08 by jtrancos          #+#    #+#             */
+/*   Updated: 2020/12/11 14:27:29 by jtrancos         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 int check_texture_init(t_data *data, int type)
@@ -57,7 +69,20 @@ int		get_texture(t_data *data, t_texture *texture, char *path)
 	return (1);
 }
 
-// FALTA EL GET_TEXTUTE_TYPE
+int	assign_texture(t_data *data, int type)
+{
+	if (type == 1)
+		return (get_texture(data, &data->textures.north, data->textures.north.path));
+	else if (type == 2)
+		return (get_texture(data, &data->textures.south, data->textures.south.path));
+	else if (type == 3)
+		return (get_texture(data, &data->textures.west, data->textures.west.path));
+	else if (type == 4)
+		return (get_texture(data, &data->textures.east, data->textures.east.path));
+	else if (type == 5)
+		return (get_texture(data, &data->textures.sprite, data->textures.sprite.path));
+	return (0);
+}
 
 int	parse_texture(t_data *data, int type, char *line)
 {
@@ -78,6 +103,9 @@ int	parse_texture(t_data *data, int type, char *line)
 		write(1, "Error\nWrong texture path.\n", 26);
 		return (0);
 	}
-	get_texture_path(data, type, &line[i]);
+	if (!get_texture_path(data, type, &line[i]))
+		return (0);
+	if (!assign_texture(data, type))
+		return (0);
 	return (1);
 }

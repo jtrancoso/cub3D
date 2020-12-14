@@ -6,17 +6,17 @@
 #    By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 11:10:51 by jtrancos          #+#    #+#              #
-#    Updated: 2020/12/10 12:25:56 by jtrancos         ###   ########.fr        #
+#    Updated: 2020/12/11 11:59:10 by jtrancos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS		= parse_file.c parse_resolution.c parse_texture.c ./utils/parser_utils.c ./utils/GNL/get_next_line.c
+SRCS		= cub3d.c parse_file.c parse_resolution.c parse_texture.c ./utils/parser_utils.c ./utils/GNL/get_next_line.c
 OBJS		= ${SRCS:.c=.o}
 NAME		= cub3D
 CC			= gcc
 RM			= rm -f
 #CFLAGS		= -Werror -Wall -Wextra
-FRAMEWORK	= -lz -L . -lft
+FRAMEWORK	= -lz -L . -lft -L . -lmlx -framework AppKit -framework OpenGL
 # MINILIB APPLE -L . -lmlx -framework AppKit -framework OpenGL 
 # MINILIB LINUX -lmlx -lm -lbsd -lXext -lX11
 LIBS		= -Lmlx_linux
@@ -28,10 +28,10 @@ LIBS		= -Lmlx_linux
 			#gcc -o $@ -c $< $(CFLAGS)
 
 ${NAME}:	${OBJS}
-			#${MAKE} -C ./mlx
+			${MAKE} -C ./mlx
 			#${MAKE} -C ./mlx_linux
 			${MAKE} -C ./libft
-			#mv ./mlx/libmlx.a .
+			mv ./mlx/libmlx.a .
 			mv ./libft/libft.a .
 			${CC} -fsanitize=address -g -o ${NAME} ${OBJS} ${FRAMEWORK}
 			#COMPILAR LINUX ${CC} -fsanitize=address ${LIBS} -o $(NAME) ${OBJS} ${FRAMEWORK}

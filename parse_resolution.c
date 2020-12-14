@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/07 14:41:51 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/07 14:41:51 by jtrancos         ###   ########.fr       */
+/*   Created: 2020/12/11 13:17:59 by jtrancos          #+#    #+#             */
+/*   Updated: 2020/12/11 13:18:01 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	parse_resolution(t_data *data, char *line)
 		i++;
 	if (!ft_isdigit(line[i]))
 	{
-		write(1, "Error. Invalid resolution.\n", 27);
+		write(1, "Error\nInvalid resolution.\n", 26);
 		return (0);
 	}
 	data->screen_height = ft_atoi(&line[i]);

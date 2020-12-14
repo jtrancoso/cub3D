@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/07 14:41:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/10 14:26:59 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/11 14:09:35 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,10 @@ int check_line(t_data *data, char *line)
 		return (parse_resolution(data, line + i));
 	if (ft_strchr("NSEW", line[i]))
 		return (find_texture(data, line + i));
+/*	if (line[i] == 'F')
+		return (parse_colour(data, 1, line + i));
+	if (line[i] == 'C')
+		return (parse_colour(data, 2, line + 1));*/
 	return (0);
 }
 
@@ -127,17 +131,10 @@ int read_file(t_data *data, const char *file)
 	return (0);
 }
 
-int	main(int argc, char **argv)
+/*int	main(int argc, char **argv)
 {
 	t_data data;
 
 	read_file(&data, argv[1]);
-	printf("%d\n", data.screen_width);
-	printf("%d\n", data.screen_height);
-	printf("%s\n", data.textures.north.path);
-	printf("%s\n", data.textures.south.path);
-	printf("%s\n", data.textures.west.path);
-	printf("%s\n", data.textures.east.path);
-	printf("%s\n", data.textures.sprite.path);
 	return (0);
-}
+}*/

@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/10 14:39:37 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/11 13:52:28 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int worldmap [mapwidth][mapheight] = {
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
-	data->img.addr[y * screenwidth + x] = color;
+	data->img.addr[y * data->screen_width + x] = color;
 }
 
 void	put_texture(t_data *data, t_wall wall, t_ray ray, int x)
@@ -108,7 +108,7 @@ void	put_texture(t_data *data, t_wall wall, t_ray ray, int x)
 	
 	step = 1.0 * wall.texture.height / ray.line_height;
 	//printf("th: %d, lh: %d, ds: %f, step: %f, tex_pos: %f, tex_y: %d, y: %d\n", wall.texture.height, ray.line_height, wall.draw_start, step, tex_pos, tex_y, y);
-	tex_pos = (wall.draw_start - screenheight / 2 + ray.line_height / 2) * step;
+	tex_pos = (wall.draw_start - data->screen_height / 2 + ray.line_height / 2) * step;
 	//printf("th: %d, lh: %d, ds: %f, step: %f, tex_pos: %f, tex_y: %d, y: %d\n", wall.texture.height, ray.line_height, wall.draw_start, step, tex_pos, tex_y, y);
 	y = wall.draw_start;
 	while (y < wall.draw_end)
@@ -262,9 +262,9 @@ int raycasting(t_data *data)
 	int i = 0;
 	
 	move_player(data);
-	while (x < screenwidth)
+	while (x < data->screen_width)
 	{
-		data->ray.camera_x = 2 * x / (float)screenwidth - 1;
+		data->ray.camera_x = 2 * x / (float)data->screen_width - 1;
 		data->ray.dir_x = data->player.dir_x + data->player.plane_x * data->ray.camera_x;
 		data->ray.dir_y = data->player.dir_y + data->player.plane_y * data->ray.camera_x;
 		data->ray.map_x = (int)data->player.x;
@@ -326,13 +326,13 @@ int raycasting(t_data *data)
 			data->wall.texture = (data->ray.step_x == -1) ? data->textures.east : data->textures.west;
 		else
 			data->wall.texture = (data->ray.step_y == -1) ? data->textures.south : data->textures.north;
-		data->ray.line_height = (int)(screenheight / data->ray.perpwalldist);
-		data->wall.draw_start = -data->ray.line_height / 2 + screenheight / 2;
+		data->ray.line_height = (int)(data->screen_height / data->ray.perpwalldist);
+		data->wall.draw_start = -data->ray.line_height / 2 + data->screen_height / 2;
 		if (data->wall.draw_start < 0)
 			data->wall.draw_start = 0;
-		data->wall.draw_end = data->ray.line_height / 2 + screenheight / 2;
-		if (data->wall.draw_end >= screenheight)
-			data->wall.draw_end = screenheight - 1;
+		data->wall.draw_end = data->ray.line_height / 2 + data->screen_height / 2;
+		if (data->wall.draw_end >= data->screen_height)
+			data->wall.draw_end = data->screen_height - 1;
 
 		//suelo y cielo y textura
 		int y = 0;
@@ -343,7 +343,7 @@ int raycasting(t_data *data)
 		}
 		draw_texture(data, data->wall, data->ray, x);
 		y = data->wall.draw_end;
-		while (y < screenheight)
+		while (y < data->screen_height)
 		{
 			my_mlx_pixel_put(data, x, y, 0x595959);
 			y++;
@@ -374,29 +374,29 @@ int raycasting(t_data *data)
 		data->sprite[i].inv_det = 1.0 / (data->player.plane_x * data->player.dir_y - data->player.dir_x * data->player.plane_y);
 		data->sprite[i].trans_x = data->sprite[i].inv_det * (data->player.dir_y * data->sprite[i].calc_x - data->player.dir_x * data->sprite[i].calc_y);
 		data->sprite[i].trans_y = data->sprite[i].inv_det * (-data->player.plane_y * data->sprite[i].calc_x + data->player.plane_x * data->sprite[i].calc_y);
-		data->sprite[i].spritescreen_x = (int)((screenwidth / 2) * (1 + data->sprite[i].trans_x / data->sprite[i].trans_y));
-		data->sprite[i].sprite_h = abs((int)(screenheight / data->sprite[i].trans_y));
-		data->sprite[i].drawstart_y = -data->sprite[i].sprite_h / 2 + screenheight / 2;
+		data->sprite[i].spritescreen_x = (int)((data->screen_width / 2) * (1 + data->sprite[i].trans_x / data->sprite[i].trans_y));
+		data->sprite[i].sprite_h = abs((int)(data->screen_height / data->sprite[i].trans_y));
+		data->sprite[i].drawstart_y = -data->sprite[i].sprite_h / 2 + data->screen_height / 2;
 		if (data->sprite[i].drawstart_y < 0)
 			data->sprite[i].drawstart_y = 0;
-		data->sprite[i].drawend_y = data->sprite[i].sprite_h / 2 + screenheight / 2;
-		if (data->sprite[i].drawend_y >= screenheight)
-			data->sprite[i].drawend_y = screenheight - 1;
-		data->sprite[i].sprite_w = abs((int)(screenheight / (data->sprite[i].trans_y)));
+		data->sprite[i].drawend_y = data->sprite[i].sprite_h / 2 + data->screen_height / 2;
+		if (data->sprite[i].drawend_y >= data->screen_height)
+			data->sprite[i].drawend_y = data->screen_height - 1;
+		data->sprite[i].sprite_w = abs((int)(data->screen_height / (data->sprite[i].trans_y)));
 		data->sprite[i].drawstart_x = -data->sprite[i].sprite_w / 2 + data->sprite[i].spritescreen_x;
 		if (data->sprite[i].drawstart_x < 0)
 			data->sprite[i].drawstart_x = 0;
 		data->sprite[i].drawend_x = data->sprite[i].sprite_w / 2 + data->sprite[i].spritescreen_x;
-		if (data->sprite[i].drawend_x >= screenwidth)
-			data->sprite[i].drawend_x = screenwidth - 1;	
+		if (data->sprite[i].drawend_x >= data->screen_width)
+			data->sprite[i].drawend_x = data->screen_width - 1;	
 		for (int stripe = data->sprite[i].drawstart_x; stripe < data->sprite[i].drawend_x; stripe++)
 		{
 			data->sprite[i].tex_x = (int)(256 * (stripe - (-data->sprite[i].sprite_w / 2 + data->sprite[i].spritescreen_x)) * data->textures.sprite.width / data->sprite[i].sprite_w) / 256;
-			if (data->sprite[i].trans_y > 0 && stripe > 0 && stripe < screenwidth && data->sprite[i].trans_y < data->zbuffer[stripe])
+			if (data->sprite[i].trans_y > 0 && stripe > 0 && stripe < data->screen_width && data->sprite[i].trans_y < data->zbuffer[stripe])
 			{
 				for (int y = data->sprite[i].drawstart_y; y < data->sprite[i].drawend_y; y++)
 				{
-					data->sprite[i].d = (y) * 256 - screenheight * 128 + data->sprite[i].sprite_h * 128;
+					data->sprite[i].d = (y) * 256 - data->screen_height * 128 + data->sprite[i].sprite_h * 128;
 					data->sprite[i].tex_y = ((data->sprite[i].d * data->textures.sprite.height) / data->sprite[i].sprite_h) / 256;
 					data->sprite[i].color = ((unsigned int*)data->textures.sprite.img.addr)[data->textures.sprite.width * data->sprite[i].tex_y + data->sprite[i].tex_x];
 					if ((data->sprite[i].color & 0x00FFFFFF) != 0)
@@ -412,7 +412,6 @@ int raycasting(t_data *data)
 int main (int argc, char **argv)
 {
 	t_data data;
-	data.screenwidth = 640;
 	data.player.x = 15;
 	data.player.y = 6;
 	data.player.dir_x = -1;
@@ -426,19 +425,29 @@ int main (int argc, char **argv)
 	data.player.keys.left = 0;
 	data.player.keys.right = 0;
 
+	
 	data.mlx = mlx_init();
-	data.win = mlx_new_window(data.mlx, screenwidth, screenheight, "raycaster");
-	data.img.img = mlx_new_image(data.mlx, screenwidth, screenheight);
+	read_file(&data, argv[1]);
+	printf("width       %d\n", data.screen_width);
+	printf("height      %d\n", data.screen_height);
+	printf("north       %p\n", data.textures.north.img.img);
+	printf("north path  %s\n", data.textures.north.path);
+	printf("south       %p\n", data.textures.south.img.img);
+	printf("south path  %s\n", data.textures.south.path);
+	printf("west        %p\n", data.textures.west.img.img);
+	printf("west path   %s\n", data.textures.west.path);
+	printf("east        %p\n", data.textures.east.img.img);
+	printf("east path   %s\n", data.textures.east.path);
+	printf("sprite      %p\n", data.textures.sprite.img.img);
+	printf("sprite path %s\n", data.textures.sprite.path);
+	return (0);
+	/*data.win = mlx_new_window(data.mlx, data.screen_width, data.screen_height, "raycaster");
+	data.img.img = mlx_new_image(data.mlx, data.screen_width, data.screen_height);
 	data.img.addr = (int *)mlx_get_data_addr(data.img.img, &data.img.bpp, &data.img.line_len, &data.img.endian);
-	get_texture(&data, &data.textures.east, "./textures/eagle.xpm");
-	get_texture(&data, &data.textures.south, "./textures/mossy.xpm");
-	get_texture(&data, &data.textures.west, "./textures/greystone.xpm");
-	get_texture(&data, &data.textures.north, "./textures/bluestone.xpm");
-	get_texture(&data, &data.textures.sprite, "./textures/barrel.xpm");
 	//printf("x: %f y: %f\n", data.player.x, data.player.y);
 	mlx_loop_hook(data.mlx, raycasting, &data);
 	mlx_hook(data.win, 02, 1L<<0, press_key, &data);
 	mlx_hook(data.win, 03, 1L<<1, release_key, &data);
 	mlx_hook(data.win, 17, 0L, ft_close, &data);
-	mlx_loop(data.mlx);
+	mlx_loop(data.mlx);*/
 }

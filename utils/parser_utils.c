@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:50:02 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/10 14:27:41 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/11 14:06:50 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int	empty_line_end(char *line)
 	}
 	return (1);
 }
+
+//int rgb_to_hex(int r)
 
 void	init_data(t_data *data)
 {
