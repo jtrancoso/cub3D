@@ -6,11 +6,36 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/11 13:18:25 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/14 14:19:26 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/15 12:26:42 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int		final_colour(t_data *data, int type)
+{
+	if (type == 1)
+	{
+		if (data->colour.floor[0] >= 0 && data->colour.floor[0] <= 255 && data->colour.floor[1] >= 0 && data->colour.floor[1] <= 255 && data->colour.floor[2] >= 0 && data->colour.floor[2] <= 255)
+			return (1);
+		else
+		{
+			write(1, "Error\nInvalid colour\n", 21);
+			return (0);
+		}
+	}
+	if (type == 2)
+	{
+		if (data->colour.sky[0] >= 0 && data->colour.sky[0] <= 255 && data->colour.sky[1] >= 0 && data->colour.sky[1] <= 255 && data->colour.sky[2] >= 0 && data->colour.sky[2] <= 255)
+			return (1);
+		else
+		{
+			write(1, "Error\nInvalid colour\n", 21);
+			return (0);
+		}
+	}
+	return (0);
+}
 
 int	check_colour(t_data *data, char *line, int type)
 {
@@ -35,38 +60,28 @@ int	check_colour(t_data *data, char *line, int type)
 	return (1);
 }
 
-int save_colour(t_data *data, char *line, int type, int index)
+void save_colour(t_data *data, char *line, int type, int j)
 {
 	if (type == 1)
-		data->colour.floor[index] = ft_atoi(line);
+		data->colour.floor[j] = ft_atoi(line);
 	if (type == 2)
-		data->colour.sky[index] = ft_atoi(line);
+		data->colour.sky[j] = ft_atoi(line);
 }
 
-int	valid_colour(t_data *data, char *line, int i, int type)
+int	valid_colour(t_data *data, char *line, int j, int type)
 {
-	check_colour(data, line, type);
+	int i;
 
-	if (ft_isdigit(line[i]) == 0)
+	i = 0;
+	check_colour(data, line, type);
+	if (!ft_isdigit(line[i]))
 	{
 		write(1, "Error\nInvalid colour format.\n", 29);
 		return (0);
 	}
-	// guardar r
-	save_colour(data, &line[i], type, 0);
-	while (ft_isdigit(line[i]))
-		i++;
-	//pasar la coma
-	//guardar g
-	//pasar numeros
-	//pasar coma
-	//guardar b
-	//pasar numeros
-	//ver q el final esta ok (espacios o nada)
+	save_colour(data, &line[i], type, j);
+	return (1);
 }
-
-// ARREGLAR BIEN TODO ESTO
-// save_colour -> valid_colour -> check_colour
 
 int	parse_colour(t_data *data, int type, char *line)
 {
@@ -84,11 +99,22 @@ int	parse_colour(t_data *data, int type, char *line)
 		i++;
 	while (j < 3)
 	{
-		if (!valid_colour(data, &line[i], i, type))
+		valid_colour(data, &line[i], j, type);
+		while (ft_isdigit(line[i]))
+			i++;
+		if (j != 2 && line[i] != ',')
 		{
-			write(1, "Error\nWrong colour bitch.\n", 26);
+			write(1, "Error\nInvalid colour format.\n", 29);
 			return (0);
 		}
+		if (line[i] == ',')
+			i++;
 		j++;
 	}
+	if (!empty_line_end(&line[i]))
+	{
+		write(1, "Error\nLine not empty after colour values.\n", 42);
+		return (0);
+	}
+	return (final_colour(data, type));
 }
