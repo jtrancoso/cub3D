@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/15 12:27:34 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/16 14:10:06 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -442,6 +442,7 @@ int main (int argc, char **argv)
 	printf("sprite path %s\n", data.textures.sprite.path);
 	printf("floor 0: %d floor 1: %d  floor 2: %d\n", data.colour.floor[0], data.colour.floor[1], data.colour.floor[2]);
 	printf("sky   0: %d sky   1: %d sky   2: %d\n", data.colour.sky[0], data.colour.sky[1], data.colour.sky[2]);
+	printf("map width: %d  map height: %d\n", data.map_width, data.map_height);
 	return (0);
 	/*data.win = mlx_new_window(data.mlx, data.screen_width, data.screen_height, "raycaster");
 	data.img.img = mlx_new_image(data.mlx, data.screen_width, data.screen_height);

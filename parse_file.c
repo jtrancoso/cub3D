@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/07 14:41:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/15 14:37:44 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/12/16 14:12:30 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,16 @@ int check_line(t_data *data, char *line)
 		i++;
 	if (line[i] == '\0')
 		return (1);
-	if (line[i] == 'R')
+	else if (line[i] == 'R')
 		return (parse_resolution(data, line + i));
-	if (ft_strchr("NSEW", line[i]))
+	else if (ft_strchr("NSEW", line[i]))
 		return (find_texture(data, line + i));
-	if (line[i] == 'F')
+	else if (line[i] == 'F')
 		return (parse_colour(data, 1, line + i));
-	if (line[i] == 'C')
+	else if (line[i] == 'C')
 		return (parse_colour(data, 2, line + i));
-	//if (ft_strchr())
+	else if (ft_strchr("012", line[i]) || ft_isspace(line[i]))
+		return (map_count(data, line + i));
 	return (0);
 }
 
