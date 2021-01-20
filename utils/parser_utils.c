@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:50:02 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/16 13:19:20 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/18 13:28:20 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,90 @@ int		check_data(t_data *data)
 	return (1);
 }
 
-//int rgb_to_hex(int r)
+void	set_player_pos(t_data *data, char nsew)
+{
+	if (nsew == 'N')
+	{
+		data->player.dir_x = -1;
+		data->player.dir_y = 0;
+		data->player.plane_x = 0;
+		data->player.plane_y= 0.66;
+	}
+	else if (nsew == 'S')
+	{
+		data->player.dir_x = 1;
+		data->player.dir_y = 0;
+		data->player.plane_x = 0;
+		data->player.plane_y= -0.66;
+	}
+	else if (nsew == 'E')
+	{
+		data->player.dir_x = 0;
+		data->player.dir_y = 1;
+		data->player.plane_x = 0.66;
+		data->player.plane_y= 0;
+	}	
+	else if (nsew == 'W')
+	{
+		data->player.dir_x = 0;
+		data->player.dir_y = -1;
+		data->player.plane_x = -0.66;
+		data->player.plane_y= 0;
+	}
+}
+
+int		check_player(t_data *data, char *line, int y)
+{
+	int x;
+
+	x = 0;
+	while (line[x] != '\0')
+	{
+		if (ft_strchr("NSEW", line[x]))
+		{
+			if (data->player.x != -1 || data->player.y != -1)
+				return (0);
+			set_player_pos(data, line[x]);
+			data->player.x = y + 0.5;
+			data->player.y = x + 0.5;
+			data->map.map[y][x] = '0';
+		}
+		x++;
+	}
+	return (1);
+}
+
+void	flood_fill(t_data *data, int x, int y, int prev_number)
+{
+	if (x < 0 || x >= data->map_width || y < 0 || y >= data->map_height)
+		return ;
+	if (data->map.map[y][x] != prev_number)
+		return ;
+	data->map.map[y][x] = '9';
+	flood_fill(data, x + 1, y, prev_number);
+	flood_fill(data, x - 1, y, prev_number);
+	flood_fill(data, x, y + 1, prev_number);
+	flood_fill(data, x, y - 1, prev_number);
+}
+
+void	convert_map(t_data *data)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < data->map_height)
+	{
+		j = 0;
+		while (j < data->map_width)
+		{
+			if (data->map.map[i][j] == '9')
+				data->map.map[i][j] = '0';
+			j++;
+		}
+		i++;
+	}
+}
 
 void	init_data(t_data *data)
 {

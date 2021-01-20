@@ -6,11 +6,13 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/11 13:17:59 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/11 13:18:01 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/20 21:23:15 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+// MIRAR SI HAY QUE COMPROBAR SI ES LA PRIMERA VEZ QUE ENTRAS
 
 void	check_max_resolution(t_data *data)
 {
@@ -25,31 +27,24 @@ int	parse_resolution(t_data *data, char *line)
 	int i;
 
 	i = 1;
+	if (!ft_isspace(line[i]))
+		return (handle_error(data, 3));
 	while (ft_isspace(line[i]))
 		i++;
 	if (ft_isdigit(line[i]) == 0)
-	{
-		write(1, "Error. Invalid resolution.\n", 27);
-		return (0);
-	}
+		return (handle_error(data, 3));
 	data->screen_width = ft_atoi(&line[i]);
 	while (ft_isdigit(line[i]))
 		i++;
 	while (ft_isspace(line[i]))
 		i++;
 	if (!ft_isdigit(line[i]))
-	{
-		write(1, "Error\nInvalid resolution.\n", 26);
-		return (0);
-	}
+		return (handle_error(data, 3));
 	data->screen_height = ft_atoi(&line[i]);
 	while (ft_isdigit(line[i]))
 		i++;
 	if (!empty_line_end(&line[i]))
-	{
-		write(1, "Error\nLine not empty after resolution values.\n", 46);
-		return (0);
-	}
+		return (handle_error(data, 4));
 	check_max_resolution(data);
 	return (1);
 }

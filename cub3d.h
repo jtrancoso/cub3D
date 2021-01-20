@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 11:43:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/16 14:11:14 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/19 13:45:02 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,12 @@ typedef struct s_player
 
 }				t_player;
 
-/*typedef struct	s_map
+typedef struct	s_map
 {
-	;
-}				t_map;*/
+	char	**map;
+	int		height;
+	int		width;
+}				t_map;
 
 typedef struct	s_colour
 {
@@ -166,7 +168,7 @@ typedef struct	s_data
 	t_wall			wall;
 	t_textures		textures;
 	t_sprite		*sprite;
-	//t_map		map;
+	t_map			map;
 	t_colour		colour;
 }				t_data;
 
@@ -179,5 +181,11 @@ int		parse_texture(t_data *data, int type, char *line);
 int		parse_colour(t_data *data, int type, char *line);
 int		check_data(t_data *data);
 int		map_count(t_data *data, char *line);
+int		parse_map(t_data *data, int fd);
+void	flood_fill(t_data *data, int x, int y, int prev_number);
+int		check_player(t_data *data, char *line, int y);
+void	convert_map(t_data *data);
+int		handle_error(t_data *data, int type);
+
 
 #endif

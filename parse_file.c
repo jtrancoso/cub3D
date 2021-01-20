@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/07 14:41:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/16 14:12:30 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/20 14:50:43 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 */
 
 
-int		find_texture(t_data *data, char *line)
+/*int		find_texture(t_data *data, char *line)
 {
 	int i;
 
@@ -46,7 +46,7 @@ int		find_texture(t_data *data, char *line)
 		return(parse_texture(data, 5, &line[i]));
 	write(1, "Error\nWrong texture identification.\n", 36);
 	return (0);
-}
+}*/
 
 int check_line(t_data *data, char *line)
 {
@@ -61,8 +61,8 @@ int check_line(t_data *data, char *line)
 		return (1);
 	else if (line[i] == 'R')
 		return (parse_resolution(data, line + i));
-	else if (ft_strchr("NSEW", line[i]))
-		return (find_texture(data, line + i));
+	/*else if (ft_strchr("NSEW", line[i]))
+		return (find_texture(data, line + i));*/
 	else if (line[i] == 'F')
 		return (parse_colour(data, 1, line + i));
 	else if (line[i] == 'C')
@@ -72,7 +72,7 @@ int check_line(t_data *data, char *line)
 	return (0);
 }
 
-int	check_extension(const char *file, char *ext)
+int	check_extension(t_data *data, const char *file, char *ext)
 {
 	size_t	len;
 	size_t	ext_len;
@@ -81,19 +81,15 @@ int	check_extension(const char *file, char *ext)
 	len = ft_strlen(file);
 	ext_len = ft_strlen(ext);
 	if (len < ext_len)
-	{
-		write(1, "Error. Invalid file.\n", 21);
-		return (0);
-	}
+		return (handle_error(data, 1));
 	tmp = ft_substr(file, len - ext_len, ext_len);
 	if (ft_strncmp(tmp, ext, 4) == 0)
 	{
 		free(tmp);
 		return (1);
 	}
-	write(1, "Error. Invalid file.\n", 21);
 	free (tmp);
-	return (0);
+	return (handle_error(data, 1));
 }
 
 int	check_file(t_data *data, const char *file, int fd)
@@ -102,7 +98,8 @@ int	check_file(t_data *data, const char *file, int fd)
 	char	*line;
 	int		correct_line;
 
-	check_extension(file, ".cub");
+	if (!check_extension(data, file, ".cub"))
+		return (0);
 	while ((ret = get_next_line(fd, &line) > 0))
 	{
 		correct_line = check_line(data, line);
@@ -114,20 +111,73 @@ int	check_file(t_data *data, const char *file, int fd)
 	free (line);
 	if (correct_line == 0)
 		return (0);
-	return (0);
+	return (1);
+}
+
+int	check_map(t_data *data)
+{
+	int i;
+
+	i = 0;
+	while (i < data->map_width)
+	{
+		if (data->map.map[0][i] == '9' || data->map.map[data->map_height - 1][i] == '9')
+		{
+			write(1, "Error\nMap not surrounded by walls at North/South\n", 49);
+			return (0);
+		}
+		i++;
+	}
+	i = 0;
+	while (i < data->map_height)
+	{
+		if (data->map.map[i][0] == '9' || data->map.map[i][data->map_width - 1] == '9')
+		{
+			write(1, "Error\nMap not surrounded by walls at West/East\n", 47);
+			return (0);
+		}
+		i++;
+	}
+	return (1);
 }
 
 int read_file(t_data *data, const char *file)
 {
-	int fd;
+	int	fd;
+	int	map_ok;
 
 	init_data(data);
 	if ((fd = open(file, O_RDONLY)) == -1)
-	{
-		write(1, "Error. Could not open file.\n", 28);
-		return (0);
-	}
+		return (handle_error(data, 0));
 	if (!check_file(data, file, fd))
 		return (0);
-	return (0);
+	if (close(fd) == -1)
+		return (handle_error(data, 2));
+	if ((fd = open(file, O_RDONLY)) == -1)
+		return (handle_error(data, 0));
+	if (!parse_map(data, fd))
+	{
+		write (1, "Error\n Map problem\n", 19);
+		return (0);
+	}
+	flood_fill(data, data->player.y, data->player.x, '0');
+	map_ok = check_map(data);
+	convert_map(data);
+	/*printf("dirx: %f diry %f planex: %f planey: %f\n", data->player.dir_x, data->player.dir_y, data->player.plane_x, data->player.plane_y);
+	printf("%d %d\n", data->sprite_num, map_ok);
+	printf("%c\n", data->map.map[0][7]);
+	int i = 0;
+	while (i < data->map_height)
+	{
+		int j = 0;
+		while (j < data->map_width)
+		{
+			printf("%c", data->map.map[i][j]);
+			j++;
+		}
+		i++;
+		printf("\n");
+	}*/
+	close(fd);
+	return (map_ok);
 }

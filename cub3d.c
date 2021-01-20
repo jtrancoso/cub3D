@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/12/16 14:10:06 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/20 13:48:56 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	sort_sprites(t_data *data)
 		j = 0;
 		while (j < numsprite)
 		{
-			//printf("sprite%d x: %f y: %f playerx: %f playery: %f dist: %f\n", i, spritemap[i].map_x, spritemap[i].map_y, data->player.x, data->player.y, data->sprite[i].dist);
 			if (data->sprite[j].dist < data->sprite[i].dist)
 			{
 				tmp = data->sprite[j];
@@ -35,17 +34,11 @@ void	sort_sprites(t_data *data)
 		}
 		i++;
 	}
-	/*i = 0;
-	while (i < numsprite)
-	{
-		printf("sprite%d x: %f y: %f playerx: %f playery: %f planex: %f planey: %f dist: %f\n", i, data->sprite[i].map_x, data->sprite[i].map_y, data->player.x, data->player.y, data->player.plane_x, data->player.plane_y, data->sprite[i].dist);
-		i++;
-	}*/
 }
 
 int		ft_close(t_data *data)
 {
-	mlx_destroy_window(data->mlx, data->win);
+	//mlx_destroy_window(data->mlx, data->win);
 	exit(0);
 	return(0);
 }
@@ -65,34 +58,6 @@ int		ft_escape(int keycode, t_data *data)
 **
 */
 
-int worldmap [mapwidth][mapheight] = {
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-};
-
-
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	data->img.addr[y * data->screen_width + x] = color;
@@ -107,18 +72,13 @@ void	put_texture(t_data *data, t_wall wall, t_ray ray, int x)
 	unsigned int color;
 	
 	step = 1.0 * wall.texture.height / ray.line_height;
-	//printf("th: %d, lh: %d, ds: %f, step: %f, tex_pos: %f, tex_y: %d, y: %d\n", wall.texture.height, ray.line_height, wall.draw_start, step, tex_pos, tex_y, y);
 	tex_pos = (wall.draw_start - data->screen_height / 2 + ray.line_height / 2) * step;
-	//printf("th: %d, lh: %d, ds: %f, step: %f, tex_pos: %f, tex_y: %d, y: %d\n", wall.texture.height, ray.line_height, wall.draw_start, step, tex_pos, tex_y, y);
 	y = wall.draw_start;
 	while (y < wall.draw_end)
 	{
-		//printf("th: %d, lh: %d, ds: %f, step: %f, tex_pos: %f, tex_y: %d, y: %d\n", wall.texture.height, ray.line_height, wall.draw_start, step, tex_pos, tex_y, y);
 		tex_y = (int)tex_pos;
 		tex_pos += step;
 		color = ((unsigned int *)wall.texture.img.addr)[wall.texture.width * tex_y + wall.texture_x];
-		//if (data->ray.side == 1 && worldmap[data->ray.map_x][data->ray.map_y] != 1 )
-		//	color /= 2;
 		my_mlx_pixel_put(data, x, y, color);
 		y++;
 	}
@@ -183,16 +143,16 @@ void	move_front_back(t_data *data)
 {
 	if (data->player.keys.w == 1) //forward
 	{
-		if(worldmap[(int)(data->player.x + data->player.dir_x * data->player.rotation)][(int)(data->player.y)] == 0)
+		if(data->map.map[(int)(data->player.x + data->player.dir_x * data->player.rotation)][(int)(data->player.y)] == 0)
 			data->player.x += data->player.dir_x * data->player.rotation;
-		if(worldmap[(int)(data->player.x)][(int)(data->player.y + data->player.dir_y * data->player.rotation)] == 0)
+		if(data->map.map[(int)(data->player.x)][(int)(data->player.y + data->player.dir_y * data->player.rotation)] == 0)
 			data->player.y += data->player.dir_y * data->player.rotation;
 	}
 	if (data->player.keys.s == 1) //back
 	{
-		if(worldmap[(int)(data->player.x - data->player.dir_x * data->player.rotation)][(int)(data->player.y)] == 0) 
+		if(data->map.map[(int)(data->player.x - data->player.dir_x * data->player.rotation)][(int)(data->player.y)] == 0) 
 			data->player.x -= data->player.dir_x * data->player.rotation;
-		if(worldmap[(int)(data->player.x)][(int)(data->player.y - data->player.dir_y * data->player.rotation)] == 0)
+		if(data->map.map[(int)(data->player.x)][(int)(data->player.y - data->player.dir_y * data->player.rotation)] == 0)
 			data->player.y -= data->player.dir_y * data->player.rotation;
 	}
 }
@@ -201,16 +161,16 @@ void move_strafe(t_data *data)
 {
 	if (data->player.keys.d == 1) //right
 	{
-		if(worldmap[(int)(data->player.x + data->player.dir_y * data->player.rotation)][(int)(data->player.y)] == 0) 
+		if(data->map.map[(int)(data->player.x + data->player.dir_y * data->player.rotation)][(int)(data->player.y)] == 0) 
 			data->player.x += data->player.dir_y * data->player.rotation;
-		if(worldmap[(int)(data->player.x)][(int)(data->player.y - data->player.dir_x * data->player.rotation)] == 0)
+		if(data->map.map[(int)(data->player.x)][(int)(data->player.y - data->player.dir_x * data->player.rotation)] == 0)
 			data->player.y -= data->player.dir_x * data->player.rotation;
 	}
 	if (data->player.keys.a == 1) //left
 	{
-		if(worldmap[(int)(data->player.x - data->player.dir_y * data->player.rotation)][(int)(data->player.y)] == 0) 
+		if(data->map.map[(int)(data->player.x - data->player.dir_y * data->player.rotation)][(int)(data->player.y)] == 0) 
 			data->player.x -= data->player.dir_y * data->player.rotation;
-		if(worldmap[(int)(data->player.x)][(int)(data->player.y + data->player.dir_x * data->player.rotation)] == 0)
+		if(data->map.map[(int)(data->player.x)][(int)(data->player.y + data->player.dir_x * data->player.rotation)] == 0)
 			data->player.y += data->player.dir_x * data->player.rotation;
 	}
 }
@@ -314,7 +274,7 @@ int raycasting(t_data *data)
 				data->ray.map_y += data->ray.step_y;
 				data->ray.side = 1;
 			}
-			if (worldmap[data->ray.map_x][data->ray.map_y] > 0)
+			if (data->map.map[data->ray.map_x][data->ray.map_y] > 0)
 				data->ray.hit = 1;
 		}
 		//calculate sides
@@ -405,30 +365,17 @@ int raycasting(t_data *data)
 			}
 		}
 	}
-	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
+	//mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
 	return (0);
 }
 
 int main (int argc, char **argv)
 {
 	t_data data;
-	data.player.x = 15;
-	data.player.y = 6;
-	data.player.dir_x = -1;
-	data.player.dir_y = 0;
-	data.player.plane_x = 0;
-	data.player.plane_y= 0.66;
-	data.player.keys.w = 0;
-	data.player.keys.a = 0;
-	data.player.keys.s = 0;
-	data.player.keys.d = 0;
-	data.player.keys.left = 0;
-	data.player.keys.right = 0;
-
 	
-	data.mlx = mlx_init();
+	//data.mlx = mlx_init();
 	read_file(&data, argv[1]);
-	printf("width       %d\n", data.screen_width);
+	/*printf("width       %d\n", data.screen_width);
 	printf("height      %d\n", data.screen_height);
 	printf("north       %p\n", data.textures.north.img.img);
 	printf("north path  %s\n", data.textures.north.path);
@@ -442,7 +389,7 @@ int main (int argc, char **argv)
 	printf("sprite path %s\n", data.textures.sprite.path);
 	printf("floor 0: %d floor 1: %d  floor 2: %d\n", data.colour.floor[0], data.colour.floor[1], data.colour.floor[2]);
 	printf("sky   0: %d sky   1: %d sky   2: %d\n", data.colour.sky[0], data.colour.sky[1], data.colour.sky[2]);
-	printf("map width: %d  map height: %d\n", data.map_width, data.map_height);
+	printf("map width: %d  map height: %d\n", data.map_width, data.map_height);*/
 	return (0);
 	/*data.win = mlx_new_window(data.mlx, data.screen_width, data.screen_height, "raycaster");
 	data.img.img = mlx_new_image(data.mlx, data.screen_width, data.screen_height);
