@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/20 13:48:56 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/21 13:59:02 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	sort_sprites(t_data *data)
 	t_sprite tmp;
 
 	i = 0;
-	while (i < numsprite)
+	while (i < data->sprite_num)
 	{
 		j = 0;
-		while (j < numsprite)
+		while (j < data->sprite_num)
 		{
 			if (data->sprite[j].dist < data->sprite[i].dist)
 			{
@@ -38,7 +38,7 @@ void	sort_sprites(t_data *data)
 
 int		ft_close(t_data *data)
 {
-	//mlx_destroy_window(data->mlx, data->win);
+	mlx_destroy_window(data->mlx, data->win);
 	exit(0);
 	return(0);
 }
@@ -238,8 +238,6 @@ int raycasting(t_data *data)
 			data->ray.delta_dist_y = 0;
 		else
 			data->ray.delta_dist_y = data->ray.dir_y == 0 ? 1 : fabs(1 / data->ray.dir_y);
-
-
 		if (data->ray.dir_x < 0)
 		{
 			data->ray.step_x = -1;
@@ -293,7 +291,6 @@ int raycasting(t_data *data)
 		data->wall.draw_end = data->ray.line_height / 2 + data->screen_height / 2;
 		if (data->wall.draw_end >= data->screen_height)
 			data->wall.draw_end = data->screen_height - 1;
-
 		//suelo y cielo y textura
 		int y = 0;
 		while (y < data->wall.draw_start)
@@ -308,26 +305,23 @@ int raycasting(t_data *data)
 			my_mlx_pixel_put(data, x, y, 0x595959);
 			y++;
 		}
+		//PETA AQUI
 		data->zbuffer[x] = data->ray.perpwalldist;
-		x++; 
+		printf("hola123\n");
+		x++;
+		printf("hola4\n");
 	}
 	// SPRITESS
-	if (!(data->sprite = malloc(sizeof(t_sprite) * numsprite)))
+	if (!(data->sprite = malloc(sizeof(t_sprite) * data->sprite_num)))
 		return (0);
-	data->sprite[0].map_x = 8.5;
-	data->sprite[0].map_y = 7.5;
-	data->sprite[1].map_x = 10.5;
-	data->sprite[1].map_y = 7.5;
-	data->sprite[2].map_x = 6.5;
-	data->sprite[2].map_y = 7.5;
-	while (i < numsprite)
+	while (i < data->sprite_num)
 	{
+		printf("hola2\n");
 		data->sprite[i].dist = ((data->player.x - data->sprite[i].map_x) * (data->player.x - data->sprite[i].map_x) + (data->player.y - data->sprite[i].map_y) * (data->player.y - data->sprite[i].map_y));
-		//printf("sprite%d x: %f y: %f playerx: %f playery: %f dist: %f\n", i, spritemap[i].map_x, spritemap[i].map_y, data->player.x, data->player.y, data->sprite[i].dist);
 		i++;
 	}
 	sort_sprites(data);
-	for (int i = 0; i < numsprite; i++)
+	for (int i = 0; i < data->sprite_num; i++)
 	{
 		data->sprite[i].calc_x = data->sprite[i].map_x - data->player.x;
 		data->sprite[i].calc_y = data->sprite[i].map_y - data->player.y;
@@ -365,7 +359,7 @@ int raycasting(t_data *data)
 			}
 		}
 	}
-	//mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
+	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
 	return (0);
 }
 
@@ -373,8 +367,9 @@ int main (int argc, char **argv)
 {
 	t_data data;
 	
-	//data.mlx = mlx_init();
-	read_file(&data, argv[1]);
+	data.mlx = mlx_init();
+	if (!read_file(&data, argv[1]))
+		return (0);
 	/*printf("width       %d\n", data.screen_width);
 	printf("height      %d\n", data.screen_height);
 	printf("north       %p\n", data.textures.north.img.img);
@@ -389,15 +384,28 @@ int main (int argc, char **argv)
 	printf("sprite path %s\n", data.textures.sprite.path);
 	printf("floor 0: %d floor 1: %d  floor 2: %d\n", data.colour.floor[0], data.colour.floor[1], data.colour.floor[2]);
 	printf("sky   0: %d sky   1: %d sky   2: %d\n", data.colour.sky[0], data.colour.sky[1], data.colour.sky[2]);
-	printf("map width: %d  map height: %d\n", data.map_width, data.map_height);*/
-	return (0);
-	/*data.win = mlx_new_window(data.mlx, data.screen_width, data.screen_height, "raycaster");
+	printf("map width: %d  map height: %d\n", data.map_width, data.map_height);
+	printf("dirx: %f diry %f planex: %f planey: %f\n", data.player.dir_x, data.player.dir_y, data.player.plane_x, data.player.plane_y);
+	int i = 0;
+	while (i < data.map_height)
+	{
+		int j = 0;
+		while (j < data.map_width)
+		{
+			printf("%c", data.map.map[i][j]);
+			j++;
+		}
+		i++;
+		printf("\n");
+	}
+	//return (0);*/
+	data.win = mlx_new_window(data.mlx, data.screen_width, data.screen_height, "raycaster");
 	data.img.img = mlx_new_image(data.mlx, data.screen_width, data.screen_height);
 	data.img.addr = (int *)mlx_get_data_addr(data.img.img, &data.img.bpp, &data.img.line_len, &data.img.endian);
-	//printf("x: %f y: %f\n", data.player.x, data.player.y);
 	mlx_loop_hook(data.mlx, raycasting, &data);
 	mlx_hook(data.win, 02, 1L<<0, press_key, &data);
 	mlx_hook(data.win, 03, 1L<<1, release_key, &data);
 	mlx_hook(data.win, 17, 0L, ft_close, &data);
-	mlx_loop(data.mlx);*/
+	mlx_loop(data.mlx);
+	return (0);
 }

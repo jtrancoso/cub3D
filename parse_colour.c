@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/11 13:18:25 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/20 21:56:06 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/21 12:23:19 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,18 @@ int		final_colour(t_data *data, int type)
 {
 	if (type == 1)
 	{
-		if (data->colour.floor[0] >= 0 && data->colour.floor[0] <= 255 && data->colour.floor[1] >= 0 && data->colour.floor[1] <= 255 && data->colour.floor[2] >= 0 && data->colour.floor[2] <= 255)
+		if (data->colour.floor[0] >= 0 && data->colour.floor[0] <= 255
+		&& data->colour.floor[1] >= 0 && data->colour.floor[1] <= 255
+		&& data->colour.floor[2] >= 0 && data->colour.floor[2] <= 255)
 			return (1);
 		else
 			return (handle_error(data, 9));
 	}
 	if (type == 2)
 	{
-		if (data->colour.sky[0] >= 0 && data->colour.sky[0] <= 255 && data->colour.sky[1] >= 0 && data->colour.sky[1] <= 255 && data->colour.sky[2] >= 0 && data->colour.sky[2] <= 255)
+		if (data->colour.sky[0] >= 0 && data->colour.sky[0] <= 255
+		&& data->colour.sky[1] >= 0 && data->colour.sky[1] <= 255
+		&& data->colour.sky[2] >= 0 && data->colour.sky[2] <= 255)
 			return (1);
 		else
 			return (handle_error(data, 9));
@@ -31,7 +35,7 @@ int		final_colour(t_data *data, int type)
 	return (0);
 }
 
-int	check_colour(t_data *data, char *line, int type)
+int		check_colour(t_data *data, char *line, int type)
 {
 	if (type == 1)
 	{
@@ -48,7 +52,7 @@ int	check_colour(t_data *data, char *line, int type)
 	return (1);
 }
 
-void save_colour(t_data *data, char *line, int type, int j)
+void	save_colour(t_data *data, char *line, int type, int j)
 {
 	if (type == 1)
 		data->colour.floor[j] = ft_atoi(line);
@@ -56,7 +60,7 @@ void save_colour(t_data *data, char *line, int type, int j)
 		data->colour.sky[j] = ft_atoi(line);
 }
 
-int	valid_colour(t_data *data, char *line, int j, int type)
+int		valid_colour(t_data *data, char *line, int j, int type)
 {
 	int i;
 
@@ -68,7 +72,7 @@ int	valid_colour(t_data *data, char *line, int j, int type)
 	return (1);
 }
 
-int	parse_colour(t_data *data, int type, char *line)
+int		parse_colour(t_data *data, int type, char *line)
 {
 	int i;
 	int j;
@@ -85,6 +89,8 @@ int	parse_colour(t_data *data, int type, char *line)
 		while (ft_isdigit(line[i]))
 			i++;
 		if (j != 2 && line[i] != ',')
+			return (handle_error(data, 10));
+		if (j == 2 && line[i] == ',')
 			return (handle_error(data, 10));
 		if (line[i] == ',')
 			i++;

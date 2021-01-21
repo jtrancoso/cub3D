@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 10:56:26 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/14 13:30:51 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/21 13:43:01 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,8 @@ int	map_count(t_data *data, char *line)
 {
 	int line_len;
 
-	/*if (!check_data(data))
-	{
-		write(1, "Error\nMap is not the last element of the file.\n", 47);
-		return (0);
-	}*/
+	if (!check_data(data))
+			return (handle_error(data, 14));
 	line_len = ft_strlen(line);
 	if (data->map_width < line_len)
 		data->map_width = line_len;
@@ -36,10 +33,7 @@ int		fill_map(t_data *data, char *line, int i)
 	while (line[j] != '\0')
 	{
 		if (!ft_strchr(" NSEW012", line[j]))
-		{
-			write(1, "Error\nWrong character in map", 28);
-			return (0);
-		}
+			return (handle_error(data, 13));
 		if (line[j] == '2')
 			data->sprite_num += 1;
 		if (line[j] == ' ')
@@ -49,10 +43,7 @@ int		fill_map(t_data *data, char *line, int i)
 		j++;
 	}
 	if (!check_player(data, line, i))
-	{
-		write(1, "Error\nWrong character\n", 22);
 		return (0);
-	}
 	return (1);
 }
 
@@ -120,6 +111,6 @@ int parse_map(t_data *data, int fd)
 		return (0);
 	free(line);
 	if (data->player.x == -1 || data->player.y == -1)
-		return (0);
+		return (handle_error(data, 18));
 	return (1);	
 }
