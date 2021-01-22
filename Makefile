@@ -6,7 +6,7 @@
 #    By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 11:10:51 by jtrancos          #+#    #+#              #
-#    Updated: 2021/01/21 11:08:07 by jtrancos         ###   ########.fr        #
+#    Updated: 2021/01/22 13:56:34 by jtrancos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ ${NAME}:	${OBJS}
 			mv ./mlx/libmlx.a .
 			mv ./libft/libft.a .
 			${CC} -fsanitize=address -g -o ${NAME} ${OBJS} ${FRAMEWORK}
+			#${CC} -fsanitize=address -g -o ${NAME} ${OBJS} ${FRAMEWORK}
 			#COMPILAR LINUX ${CC} -fsanitize=address ${LIBS} -o $(NAME) ${OBJS} ${FRAMEWORK}
 
 all:		${NAME}

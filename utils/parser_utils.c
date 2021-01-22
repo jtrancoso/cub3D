@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:50:02 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/21 13:19:14 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/22 14:13:12 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,11 @@ void	convert_map(t_data *data)
 {
 	int i;
 	int j;
+	int queonda;
+	//t_sprite sprite;
 
 	i = 0;
+	queonda = 0;
 	while (i < data->map_height)
 	{
 		j = 0;
@@ -129,11 +132,31 @@ void	convert_map(t_data *data)
 		{
 			if (data->map.map[i][j] == '9')
 				data->map.map[i][j] = '0';
+			if (data->map.map[i][j] == '2')
+			{
+				t_sprite sprite;
+				sprite.map_x = j;
+				sprite.map_y = i;
+				data->sprite[queonda++] = sprite;
+			}
 			j++;
 		}
 		i++;
 	}
 }
+
+/*void	create_sprite(t_data *data)
+{
+	t_sprite sprite;
+	int i;
+	int j;
+
+	i = 0;
+	while (i < data->map)
+	sprite.map_x = x;
+	sprite.map_y = y;
+	data->sprite[data->sprite_num] = sprite;
+}*/
 
 void	init_data(t_data *data)
 {

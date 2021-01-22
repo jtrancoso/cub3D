@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/11 13:18:25 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/21 12:23:19 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/22 11:17:15 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ int		check_colour(t_data *data, char *line, int type)
 	{
 		if (data->colour.floor[0] != -1 && data->colour.floor[1] != -1
 		&& data->colour.floor[2] != -1)
-			return (handle_error(data, 11));
+			return (handle_error(data, 12));
 	}
 	else if (type == 2)
 	{
 		if (data->colour.sky[0] != -1 && data->colour.sky[1] != -1
 			&& data->colour.sky[2] != -1)
-			return (handle_error(data, 11));
+			return (handle_error(data, 12));
 	}
 	return (1);
 }
@@ -97,6 +97,6 @@ int		parse_colour(t_data *data, int type, char *line)
 		j++;
 	}
 	if (!empty_line_end(&line[i]))
-		return (handle_error(data, 12));
+		return (handle_error(data, 13));
 	return (final_colour(data, type));
 }

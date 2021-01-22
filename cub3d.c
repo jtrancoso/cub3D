@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/21 13:59:02 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/22 14:16:39 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,16 +143,16 @@ void	move_front_back(t_data *data)
 {
 	if (data->player.keys.w == 1) //forward
 	{
-		if(data->map.map[(int)(data->player.x + data->player.dir_x * data->player.rotation)][(int)(data->player.y)] == 0)
+		if(data->map.map[(int)(data->player.x + data->player.dir_x * data->player.rotation)][(int)(data->player.y)] == '0')
 			data->player.x += data->player.dir_x * data->player.rotation;
-		if(data->map.map[(int)(data->player.x)][(int)(data->player.y + data->player.dir_y * data->player.rotation)] == 0)
+		if(data->map.map[(int)(data->player.x)][(int)(data->player.y + data->player.dir_y * data->player.rotation)] == '0')
 			data->player.y += data->player.dir_y * data->player.rotation;
 	}
 	if (data->player.keys.s == 1) //back
 	{
-		if(data->map.map[(int)(data->player.x - data->player.dir_x * data->player.rotation)][(int)(data->player.y)] == 0) 
+		if(data->map.map[(int)(data->player.x - data->player.dir_x * data->player.rotation)][(int)(data->player.y)] == '0') 
 			data->player.x -= data->player.dir_x * data->player.rotation;
-		if(data->map.map[(int)(data->player.x)][(int)(data->player.y - data->player.dir_y * data->player.rotation)] == 0)
+		if(data->map.map[(int)(data->player.x)][(int)(data->player.y - data->player.dir_y * data->player.rotation)] == '0')
 			data->player.y -= data->player.dir_y * data->player.rotation;
 	}
 }
@@ -161,16 +161,16 @@ void move_strafe(t_data *data)
 {
 	if (data->player.keys.d == 1) //right
 	{
-		if(data->map.map[(int)(data->player.x + data->player.dir_y * data->player.rotation)][(int)(data->player.y)] == 0) 
+		if(data->map.map[(int)(data->player.x + data->player.dir_y * data->player.rotation)][(int)(data->player.y)] == '0') 
 			data->player.x += data->player.dir_y * data->player.rotation;
-		if(data->map.map[(int)(data->player.x)][(int)(data->player.y - data->player.dir_x * data->player.rotation)] == 0)
+		if(data->map.map[(int)(data->player.x)][(int)(data->player.y - data->player.dir_x * data->player.rotation)] == '0')
 			data->player.y -= data->player.dir_x * data->player.rotation;
 	}
 	if (data->player.keys.a == 1) //left
 	{
-		if(data->map.map[(int)(data->player.x - data->player.dir_y * data->player.rotation)][(int)(data->player.y)] == 0) 
+		if(data->map.map[(int)(data->player.x - data->player.dir_y * data->player.rotation)][(int)(data->player.y)] == '0') 
 			data->player.x -= data->player.dir_y * data->player.rotation;
-		if(data->map.map[(int)(data->player.x)][(int)(data->player.y + data->player.dir_x * data->player.rotation)] == 0)
+		if(data->map.map[(int)(data->player.x)][(int)(data->player.y + data->player.dir_x * data->player.rotation)] == '0')
 			data->player.y += data->player.dir_x * data->player.rotation;
 	}
 }
@@ -204,7 +204,7 @@ void rotation_left(t_data *data)
 void move_player(t_data *data)
 {
 	data->player.speed = 0.2;
-	data->player.rotation = 0.05;
+	data->player.rotation = 0.03;
 
 	move_strafe(data);
 	move_front_back(data);
@@ -272,7 +272,7 @@ int raycasting(t_data *data)
 				data->ray.map_y += data->ray.step_y;
 				data->ray.side = 1;
 			}
-			if (data->map.map[data->ray.map_x][data->ray.map_y] > 0)
+			if (data->map.map[data->ray.map_x][data->ray.map_y] > '0')
 				data->ray.hit = 1;
 		}
 		//calculate sides
@@ -305,18 +305,12 @@ int raycasting(t_data *data)
 			my_mlx_pixel_put(data, x, y, 0x595959);
 			y++;
 		}
-		//PETA AQUI
 		data->zbuffer[x] = data->ray.perpwalldist;
-		printf("hola123\n");
 		x++;
-		printf("hola4\n");
 	}
 	// SPRITESS
-	if (!(data->sprite = malloc(sizeof(t_sprite) * data->sprite_num)))
-		return (0);
 	while (i < data->sprite_num)
 	{
-		printf("hola2\n");
 		data->sprite[i].dist = ((data->player.x - data->sprite[i].map_x) * (data->player.x - data->sprite[i].map_x) + (data->player.y - data->sprite[i].map_y) * (data->player.y - data->sprite[i].map_y));
 		i++;
 	}
@@ -342,9 +336,12 @@ int raycasting(t_data *data)
 			data->sprite[i].drawstart_x = 0;
 		data->sprite[i].drawend_x = data->sprite[i].sprite_w / 2 + data->sprite[i].spritescreen_x;
 		if (data->sprite[i].drawend_x >= data->screen_width)
-			data->sprite[i].drawend_x = data->screen_width - 1;	
+			data->sprite[i].drawend_x = data->screen_width - 1;
+		printf("sprite_w: %d, spritescreen: %d ", data->sprite[i].sprite_w, data->sprite[i].spritescreen_x);
+		printf("drawstartx: %d, drawendx: %d\n", data->sprite[i].drawstart_x, data->sprite[i].drawend_x);
 		for (int stripe = data->sprite[i].drawstart_x; stripe < data->sprite[i].drawend_x; stripe++)
 		{
+			printf("hola\n");
 			data->sprite[i].tex_x = (int)(256 * (stripe - (-data->sprite[i].sprite_w / 2 + data->sprite[i].spritescreen_x)) * data->textures.sprite.width / data->sprite[i].sprite_w) / 256;
 			if (data->sprite[i].trans_y > 0 && stripe > 0 && stripe < data->screen_width && data->sprite[i].trans_y < data->zbuffer[stripe])
 			{
@@ -385,6 +382,7 @@ int main (int argc, char **argv)
 	printf("floor 0: %d floor 1: %d  floor 2: %d\n", data.colour.floor[0], data.colour.floor[1], data.colour.floor[2]);
 	printf("sky   0: %d sky   1: %d sky   2: %d\n", data.colour.sky[0], data.colour.sky[1], data.colour.sky[2]);
 	printf("map width: %d  map height: %d\n", data.map_width, data.map_height);
+	printf("numsprite: %d\n", data.sprite_num);
 	printf("dirx: %f diry %f planex: %f planey: %f\n", data.player.dir_x, data.player.dir_y, data.player.plane_x, data.player.plane_y);
 	int i = 0;
 	while (i < data.map_height)
@@ -397,7 +395,7 @@ int main (int argc, char **argv)
 		}
 		i++;
 		printf("\n");
-	}
+	}*/
 	//return (0);*/
 	data.win = mlx_new_window(data.mlx, data.screen_width, data.screen_height, "raycaster");
 	data.img.img = mlx_new_image(data.mlx, data.screen_width, data.screen_height);

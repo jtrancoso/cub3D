@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 12:25:08 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/21 13:42:48 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/22 11:14:41 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	colour_error(t_data *data, int type)
 	}
 	if (type == 12)
 	{
-		write(1, "Error\nDuplicated colour.\n", 24);
+		write(1, "Error\nDuplicated colour.\n", 25);
 		return (0);
 	}
 	if (type == 13)
