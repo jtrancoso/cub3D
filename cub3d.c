@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/22 14:16:39 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/25 12:03:27 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,8 +219,7 @@ int raycasting(t_data *data)
 	int x = 0;
 	int color;
 	int tex_y;
-	int i = 0;
-	
+
 	move_player(data);
 	while (x < data->screen_width)
 	{
@@ -272,7 +271,7 @@ int raycasting(t_data *data)
 				data->ray.map_y += data->ray.step_y;
 				data->ray.side = 1;
 			}
-			if (data->map.map[data->ray.map_x][data->ray.map_y] > '0')
+			if (data->map.map[data->ray.map_x][data->ray.map_y] == '1')
 				data->ray.hit = 1;
 		}
 		//calculate sides
@@ -309,6 +308,7 @@ int raycasting(t_data *data)
 		x++;
 	}
 	// SPRITESS
+	int i = 0;
 	while (i < data->sprite_num)
 	{
 		data->sprite[i].dist = ((data->player.x - data->sprite[i].map_x) * (data->player.x - data->sprite[i].map_x) + (data->player.y - data->sprite[i].map_y) * (data->player.y - data->sprite[i].map_y));
@@ -337,11 +337,9 @@ int raycasting(t_data *data)
 		data->sprite[i].drawend_x = data->sprite[i].sprite_w / 2 + data->sprite[i].spritescreen_x;
 		if (data->sprite[i].drawend_x >= data->screen_width)
 			data->sprite[i].drawend_x = data->screen_width - 1;
-		printf("sprite_w: %d, spritescreen: %d ", data->sprite[i].sprite_w, data->sprite[i].spritescreen_x);
-		printf("drawstartx: %d, drawendx: %d\n", data->sprite[i].drawstart_x, data->sprite[i].drawend_x);
 		for (int stripe = data->sprite[i].drawstart_x; stripe < data->sprite[i].drawend_x; stripe++)
 		{
-			printf("hola\n");
+
 			data->sprite[i].tex_x = (int)(256 * (stripe - (-data->sprite[i].sprite_w / 2 + data->sprite[i].spritescreen_x)) * data->textures.sprite.width / data->sprite[i].sprite_w) / 256;
 			if (data->sprite[i].trans_y > 0 && stripe > 0 && stripe < data->screen_width && data->sprite[i].trans_y < data->zbuffer[stripe])
 			{
@@ -395,7 +393,7 @@ int main (int argc, char **argv)
 		}
 		i++;
 		printf("\n");
-	}*/
+	}
 	//return (0);*/
 	data.win = mlx_new_window(data.mlx, data.screen_width, data.screen_height, "raycaster");
 	data.img.img = mlx_new_image(data.mlx, data.screen_width, data.screen_height);

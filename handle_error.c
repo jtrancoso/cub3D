@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 12:25:08 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/22 11:14:41 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/25 12:59:46 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,16 @@ int	player_error(t_data *data, int type)
 	return (0);
 }
 
+int	misc_error(t_data * data, int type)
+{
+	if (type == 20)
+	{
+		write(1, "Error\nInvalid element descriptor.\n", 34);
+		return (0);
+	}
+	return (0);
+}
+
 int	handle_error(t_data *data, int type)
 {
 	if (type >= 0 && type <= 2)
@@ -156,5 +166,7 @@ int	handle_error(t_data *data, int type)
 		return (map_error(data, type));
 	if (type == 18 || type == 19)
 		return (player_error(data, type));
+	if (type == 20)
+		return (misc_error(data, type));
 	return (0);
 }

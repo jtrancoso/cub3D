@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:50:02 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/22 14:13:12 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/25 12:33:16 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int		check_player(t_data *data, char *line, int y)
 		if (ft_strchr("NSEW", line[x]))
 		{
 			if (data->player.x != -1 || data->player.y != -1)
-				return (handle_error(data, 18));
+				return (handle_error(data, 19));
 			set_player_pos(data, line[x]);
 			data->player.x = y + 0.5;
 			data->player.y = x + 0.5;
@@ -135,8 +135,8 @@ void	convert_map(t_data *data)
 			if (data->map.map[i][j] == '2')
 			{
 				t_sprite sprite;
-				sprite.map_x = j;
-				sprite.map_y = i;
+				sprite.map_x = i + 0.5;
+				sprite.map_y = j + 0.5;
 				data->sprite[queonda++] = sprite;
 			}
 			j++;
@@ -144,19 +144,6 @@ void	convert_map(t_data *data)
 		i++;
 	}
 }
-
-/*void	create_sprite(t_data *data)
-{
-	t_sprite sprite;
-	int i;
-	int j;
-
-	i = 0;
-	while (i < data->map)
-	sprite.map_x = x;
-	sprite.map_y = y;
-	data->sprite[data->sprite_num] = sprite;
-}*/
 
 void	init_data(t_data *data)
 {

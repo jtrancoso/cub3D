@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/11 13:18:25 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/22 11:17:15 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/25 13:06:37 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		final_colour(t_data *data, int type)
 		&& data->colour.floor[2] >= 0 && data->colour.floor[2] <= 255)
 			return (1);
 		else
-			return (handle_error(data, 9));
+			return (handle_error(data, 10));
 	}
 	if (type == 2)
 	{
@@ -30,7 +30,7 @@ int		final_colour(t_data *data, int type)
 		&& data->colour.sky[2] >= 0 && data->colour.sky[2] <= 255)
 			return (1);
 		else
-			return (handle_error(data, 9));
+			return (handle_error(data, 10));
 	}
 	return (0);
 }
@@ -65,9 +65,10 @@ int		valid_colour(t_data *data, char *line, int j, int type)
 	int i;
 
 	i = 0;
-	check_colour(data, line, type);
+	if (!check_colour(data, line, type))
+		return (0);
 	if (!ft_isdigit(line[i]))
-		return (handle_error(data, 10));
+		return (handle_error(data, 11));
 	save_colour(data, &line[i], type, j);
 	return (1);
 }
@@ -80,7 +81,7 @@ int		parse_colour(t_data *data, int type, char *line)
 	i = 1;
 	j = 0;
 	if (!ft_isspace(line[i]))
-		return (handle_error(data, 10));
+		return (handle_error(data, 11));
 	while (ft_isspace(line[i]))
 		i++;
 	while (j < 3)
@@ -89,9 +90,9 @@ int		parse_colour(t_data *data, int type, char *line)
 		while (ft_isdigit(line[i]))
 			i++;
 		if (j != 2 && line[i] != ',')
-			return (handle_error(data, 10));
+			return (handle_error(data, 11));
 		if (j == 2 && line[i] == ',')
-			return (handle_error(data, 10));
+			return (handle_error(data, 11));
 		if (line[i] == ',')
 			i++;
 		j++;

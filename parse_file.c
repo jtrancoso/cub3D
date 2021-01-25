@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/07 14:41:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/22 14:12:51 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/25 13:00:50 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int check_line(t_data *data, char *line)
 		return (parse_colour(data, 2, line + i));
 	else if (ft_strchr("012", line[i]) || ft_isspace(line[i]))
 		return (map_count(data, line + i));
-	return (0);
+	return (handle_error(data, 20));
 }
 
 int	check_extension(t_data *data, const char *file, char *ext)
@@ -120,17 +120,17 @@ int	check_map(t_data *data)
 	i = 0;
 	while (i < data->map_width)
 	{
-		if (data->map.map[0][i] == '9' ||
-			data->map.map[data->map_height - 1][i] == '9')
-			return (handle_error(data, 14));
+		if (data->map.map[0][i] != '1' ||
+			data->map.map[data->map_height - 1][i] != '1')
+			return (handle_error(data, 15));
 		i++;
 	}
 	i = 0;
 	while (i < data->map_height)
 	{
-		if (data->map.map[i][0] == '9' ||
-			data->map.map[i][data->map_width - 1] == '9')
-			return (handle_error(data, 15));
+		if (data->map.map[i][0] != '1' ||
+			data->map.map[i][data->map_width - 1] != '1')
+			return (handle_error(data, 16));
 		i++;
 	}
 	return (1);

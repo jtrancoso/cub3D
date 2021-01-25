@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 10:56:26 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/22 13:48:35 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/25 12:33:19 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	map_count(t_data *data, char *line)
 	int line_len;
 
 	if (!check_data(data))
-			return (handle_error(data, 14));
+			return (handle_error(data, 17));
 	line_len = ft_strlen(line);
 	if (data->map_width < line_len)
 		data->map_width = line_len;
@@ -33,7 +33,7 @@ int		fill_map(t_data *data, char *line, int i)
 	while (line[j] != '\0')
 	{
 		if (!ft_strchr(" NSEW012", line[j]))
-			return (handle_error(data, 13));
+			return (handle_error(data, 14));
 		if (line[j] == '2')
 			data->sprite_num += 1;
 		if (line[j] == ' ')
