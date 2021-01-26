@@ -6,18 +6,18 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 10:56:26 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/25 12:33:19 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/26 10:49:54 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 int	map_count(t_data *data, char *line)
 {
 	int line_len;
 
 	if (!check_data(data))
-			return (handle_error(data, 17));
+		return (handle_error(data, 17));
 	line_len = ft_strlen(line);
 	if (data->map_width < line_len)
 		data->map_width = line_len;
@@ -25,7 +25,7 @@ int	map_count(t_data *data, char *line)
 	return (1);
 }
 
-int		fill_map(t_data *data, char *line, int i)
+int	fill_map(t_data *data, char *line, int i)
 {
 	int j;
 
@@ -56,7 +56,7 @@ int	check_map_line(t_data *data, char *line, int *i)
 		j++;
 	if (ft_isdigit(line[j]))
 	{
-		if(!(fill_map(data, line, *i)))
+		if (!(fill_map(data, line, *i)))
 		{
 			free(line);
 			return (0);
@@ -66,7 +66,7 @@ int	check_map_line(t_data *data, char *line, int *i)
 	return (1);
 }
 
-int alloc_map(t_data *data)
+int	alloc_map(t_data *data)
 {
 	int i;
 	int j;
@@ -78,7 +78,7 @@ int alloc_map(t_data *data)
 	{
 		j = 0;
 		if (!(data->map.map[i] = malloc(data->map_width * sizeof(char *))))
-		{	
+		{
 			free(data->map.map);
 			return (0);
 		}
@@ -92,7 +92,7 @@ int alloc_map(t_data *data)
 	return (1);
 }
 
-int parse_map(t_data *data, int fd)
+int	parse_map(t_data *data, int fd)
 {
 	char	*line;
 	int		ret;
@@ -112,5 +112,5 @@ int parse_map(t_data *data, int fd)
 	free(line);
 	if (data->player.x == -1 || data->player.y == -1)
 		return (handle_error(data, 18));
-	return (1);	
+	return (1);
 }

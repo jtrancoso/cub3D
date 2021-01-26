@@ -6,48 +6,31 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/07 14:41:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/25 13:00:50 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/26 10:52:36 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
-/*
-** 1º Leemos el .cub con read
-** 2º limpiamos todos los espacios
-** 3º tenemos que ver que tipo de linea tenemos (text, resolucion, color, etc)
-** 4º R: guardamos primer numero en anchura y segundo en altura
-** 5º NSEW: guardamos la texturas 
-** 6º CF: guardamos color de cielo o suelo y lo pasamos a hexa 
-** 7º 012: guardamos el mapa y quitamos espacios si los hubiera
-**
-**
-**
-**
-**
-**
-*/
-
-
-int		find_texture(t_data *data, char *line)
+int	find_texture(t_data *data, char *line)
 {
 	int i;
 
 	i = 0;
 	if (line[i] == 'N' && line[i + 1] == 'O')
-		return(parse_texture(data, 1, &line[i]));
+		return (parse_texture(data, 1, &line[i]));
 	else if (line[i] == 'S' && line[i + 1] == 'O')
-		return(parse_texture(data, 2, &line[i]));
+		return (parse_texture(data, 2, &line[i]));
 	else if (line[i] == 'W' && line[i + 1] == 'E')
-		return(parse_texture(data, 3, &line[i]));
+		return (parse_texture(data, 3, &line[i]));
 	else if (line[i] == 'E' && line[i + 1] == 'A')
-		return(parse_texture(data, 4, &line[i]));
+		return (parse_texture(data, 4, &line[i]));
 	else if (line[i] == 'S')
-		return(parse_texture(data, 5, &line[i]));
+		return (parse_texture(data, 5, &line[i]));
 	return (handle_error(data, 9));
 }
 
-int check_line(t_data *data, char *line)
+int	check_line(t_data *data, char *line)
 {
 	int i;
 
@@ -63,32 +46,12 @@ int check_line(t_data *data, char *line)
 	else if (ft_strchr("NSEW", line[i]))
 		return (find_texture(data, line + i));
 	else if (line[i] == 'F')
-		return (parse_colour(data, 1, line + i));
+		return (parse_colour(data, 1, line + i, i));
 	else if (line[i] == 'C')
-		return (parse_colour(data, 2, line + i));
+		return (parse_colour(data, 2, line + i, i));
 	else if (ft_strchr("012", line[i]) || ft_isspace(line[i]))
 		return (map_count(data, line + i));
 	return (handle_error(data, 20));
-}
-
-int	check_extension(t_data *data, const char *file, char *ext)
-{
-	size_t	len;
-	size_t	ext_len;
-	char	*tmp;
-
-	len = ft_strlen(file);
-	ext_len = ft_strlen(ext);
-	if (len < ext_len)
-		return (handle_error(data, 1));
-	tmp = ft_substr(file, len - ext_len, ext_len);
-	if (ft_strncmp(tmp, ext, 4) == 0)
-	{
-		free(tmp);
-		return (1);
-	}
-	free (tmp);
-	return (handle_error(data, 1));
 }
 
 int	check_file(t_data *data, const char *file, int fd)
@@ -107,7 +70,7 @@ int	check_file(t_data *data, const char *file, int fd)
 			return (0);
 	}
 	correct_line = check_line(data, line);
-	free (line);
+	free(line);
 	if (correct_line == 0)
 		return (0);
 	return (1);
@@ -136,7 +99,7 @@ int	check_map(t_data *data)
 	return (1);
 }
 
-int read_file(t_data *data, const char *file)
+int	read_file(t_data *data, const char *file)
 {
 	int	fd;
 	int	map_ok;

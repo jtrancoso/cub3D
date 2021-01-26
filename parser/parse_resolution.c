@@ -6,13 +6,11 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/11 13:17:59 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/20 21:23:15 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/26 10:49:51 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-
-// MIRAR SI HAY QUE COMPROBAR SI ES LA PRIMERA VEZ QUE ENTRAS
+#include "../cub3d.h"
 
 void	check_max_resolution(t_data *data)
 {
@@ -22,7 +20,7 @@ void	check_max_resolution(t_data *data)
 		data->screen_width = MAX_SCREENWIDTH;
 }
 
-int	parse_resolution(t_data *data, char *line)
+int		parse_resolution(t_data *data, char *line)
 {
 	int i;
 

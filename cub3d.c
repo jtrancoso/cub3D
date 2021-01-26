@@ -6,35 +6,11 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/25 12:03:27 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/26 13:28:55 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	sort_sprites(t_data *data)
-{
-	int j;
-	int i;
-	t_sprite tmp;
-
-	i = 0;
-	while (i < data->sprite_num)
-	{
-		j = 0;
-		while (j < data->sprite_num)
-		{
-			if (data->sprite[j].dist < data->sprite[i].dist)
-			{
-				tmp = data->sprite[j];
-				data->sprite[j] = data->sprite[i];
-				data->sprite[i] = tmp;
-			}
-			j++;
-		}
-		i++;
-	}
-}
 
 int		ft_close(t_data *data)
 {
@@ -50,56 +26,6 @@ int		ft_escape(int keycode, t_data *data)
 		ft_close(data);
 	}
 	return(0);
-}
-
-/*
-** comentario
-** valido
-**
-*/
-
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	data->img.addr[y * data->screen_width + x] = color;
-}
-
-void	put_texture(t_data *data, t_wall wall, t_ray ray, int x)
-{
-	float	step;
-	float	tex_pos;
-	int		tex_y;
-	int		y;
-	unsigned int color;
-	
-	step = 1.0 * wall.texture.height / ray.line_height;
-	tex_pos = (wall.draw_start - data->screen_height / 2 + ray.line_height / 2) * step;
-	y = wall.draw_start;
-	while (y < wall.draw_end)
-	{
-		tex_y = (int)tex_pos;
-		tex_pos += step;
-		color = ((unsigned int *)wall.texture.img.addr)[wall.texture.width * tex_y + wall.texture_x];
-		my_mlx_pixel_put(data, x, y, color);
-		y++;
-	}
-}
-void	draw_texture(t_data *data, t_wall wall, t_ray ray, int x)
-{
-	float	wall_x;
-	int		tex_x;
-
-	if (ray.side == 0)
-		wall_x = data->player.y + ray.perpwalldist * ray.dir_y;
-	else
-		wall_x = data->player.x + ray.perpwalldist * ray.dir_x;
-	wall_x -= floor(wall_x);
-	tex_x = (int)(wall_x * (float)wall.texture.width);
-	if (ray.side == 0 && ray.dir_x > 0)
-		tex_x = wall.texture.width	- tex_x - 1;
-	if (ray.side == 1 && ray.dir_y < 0)
-		tex_x = wall.texture.width - tex_x - 1;
-	wall.texture_x = tex_x;
-	put_texture(data, wall, ray, x);
 }
 
 int press_key(int keycode, t_data * data)
@@ -136,7 +62,6 @@ int release_key(int keycode, t_data *data)
 	else if (keycode == 124)
 		data->player.keys.right = 0;
 	return (1);
-	
 }
 
 void	move_front_back(t_data *data)

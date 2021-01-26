@@ -6,13 +6,13 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/11 13:19:08 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/20 21:40:06 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/26 10:49:46 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
-int check_texture_init(t_data *data, int type)
+int	check_texture_init(t_data *data, int type)
 {
 	if (type == 1)
 		return (data->textures.north.height == -1 ? 1 : 0);
@@ -44,7 +44,7 @@ int	get_texture_path(t_data *data, int type, char *line)
 	return (1);
 }
 
-int		get_texture(t_data *data, t_texture *texture, char *path)
+int	get_texture(t_data *data, t_texture *texture, char *path)
 {
 	int fd;
 
@@ -53,34 +53,41 @@ int		get_texture(t_data *data, t_texture *texture, char *path)
 		close(fd);
 		return (handle_error(data, 8));
 	}
-	texture->img.img = mlx_xpm_file_to_image(data->mlx, path, &texture->width, &texture->height);
+	texture->img.img = mlx_xpm_file_to_image(data->mlx, path,
+						&texture->width, &texture->height);
 	if (!texture->img.img)
 		return (handle_error(data, 7));
-	if (!(texture->img.addr = (int *)mlx_get_data_addr(texture->img.img, &texture->img.bpp, &texture->img.line_len, &texture->img.endian)))
+	if (!(texture->img.addr = (int *)mlx_get_data_addr(texture->img.img,
+		&texture->img.bpp, &texture->img.line_len, &texture->img.endian)))
 		return (0);
-//	printf("tw: %d, th: %d, img: %p, bpp: %d, linelen: %d, endian: %d\n", texture->width, texture->height, texture->img.img, texture->img.bpp, texture->img.line_len, texture->img.endian);
-	//printf("%x\n", ((unsigned int)data->wall.texture.img.addr[0]));
 	return (1);
 }
 
 int	assign_texture(t_data *data, int type)
 {
 	if (type == 1)
-		return (get_texture(data, &data->textures.north, data->textures.north.path));
+		return (get_texture(data, &data->textures.north,
+							data->textures.north.path));
 	else if (type == 2)
-		return (get_texture(data, &data->textures.south, data->textures.south.path));
+		return (get_texture(data, &data->textures.south,
+							data->textures.south.path));
 	else if (type == 3)
-		return (get_texture(data, &data->textures.west, data->textures.west.path));
+		return (get_texture(data, &data->textures.west,
+							data->textures.west.path));
 	else if (type == 4)
-		return (get_texture(data, &data->textures.east, data->textures.east.path));
+		return (get_texture(data, &data->textures.east,
+							data->textures.east.path));
 	else if (type == 5)
-		return (get_texture(data, &data->textures.sprite, data->textures.sprite.path));
-	return (0);
+		return (get_texture(data, &data->textures.sprite,
+							data->textures.sprite.path));
+	else
+		return (0);
 }
 
 int	parse_texture(t_data *data, int type, char *line)
 {
 	int i;
+
 	if (type == 5)
 		i = 1;
 	else

@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 11:43:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/22 13:55:36 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/26 12:24:33 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ int		empty_line_end(char *line);
 int		read_file(t_data *data, const char *file);
 int		parse_resolution(t_data *data, char *line);
 int		parse_texture(t_data *data, int type, char *line);
-int		parse_colour(t_data *data, int type, char *line);
+int		parse_colour(t_data *data, int type, char *line, int i);
 int		check_data(t_data *data);
 int		map_count(t_data *data, char *line);
 int		parse_map(t_data *data, int fd);
@@ -186,6 +186,9 @@ void	flood_fill(t_data *data, int x, int y, int prev_number);
 int		check_player(t_data *data, char *line, int y);
 void	convert_map(t_data *data);
 int		handle_error(t_data *data, int type);
-
+int		check_extension(t_data *data, const char *file, char *ext);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	sort_sprites(t_data *data);
+void	draw_texture(t_data *data, t_wall wall, t_ray ray, int x);
 
 #endif

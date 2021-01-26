@@ -6,11 +6,11 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 12:25:08 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/25 12:59:46 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/26 12:17:40 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 int	file_error(t_data *data, int type)
 {

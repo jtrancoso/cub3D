@@ -6,11 +6,11 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/11 13:18:25 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/25 13:06:37 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/26 10:49:59 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 int		final_colour(t_data *data, int type)
 {
@@ -73,9 +73,8 @@ int		valid_colour(t_data *data, char *line, int j, int type)
 	return (1);
 }
 
-int		parse_colour(t_data *data, int type, char *line)
+int		parse_colour(t_data *data, int type, char *line, int i)
 {
-	int i;
 	int j;
 
 	i = 1;
@@ -86,7 +85,8 @@ int		parse_colour(t_data *data, int type, char *line)
 		i++;
 	while (j < 3)
 	{
-		valid_colour(data, &line[i], j, type);
+		if (!valid_colour(data, &line[i], j, type))
+			return (0);
 		while (ft_isdigit(line[i]))
 			i++;
 		if (j != 2 && line[i] != ',')
