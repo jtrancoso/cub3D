@@ -1,13 +1,13 @@
 
  R 1280 720
 
-NO ./textures/purplestone.xpm
-SO ./textures/redbrick.xpm
-WE ./textures/eagle.xpm
-EA ./textures/wood.xpm
+NO ./textures/zwood.xpm
+SO ./textures/zstone.xpm
+WE ./textures/zbrick.xpm
+EA ./textures/zbox.xpm
 
-S ./textures/barrel.xpm
-F 89,89,89
+S ./textures/zbones.xpm
+F 188,136,92
 C 68,206,235
 
 11111111111111111111111111111

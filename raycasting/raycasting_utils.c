@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 12:22:59 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/26 12:24:38 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/01/28 11:24:50 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,25 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	data->img.addr[y * data->screen_width + x] = color;
 }
 
+void	assign_sprite(t_data *data)
+{
+	int i;
+
+	i = 0;
+	while (i < data->sprite_num)
+	{
+		data->sprite[i].dist = ((data->player.x - data->sprite[i].map_x)
+		* (data->player.x - data->sprite[i].map_x) + (data->player.y -
+		data->sprite[i].map_y) * (data->player.y - data->sprite[i].map_y));
+		i++;
+	}
+}
+
 void	sort_sprites(t_data *data)
 {
-	int j;
-	int i;
-	t_sprite tmp;
+	int			j;
+	int			i;
+	t_sprite	tmp;
 
 	i = 0;
 	while (i < data->sprite_num)
