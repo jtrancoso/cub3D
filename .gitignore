@@ -9,4 +9,5 @@ test.png
 test.xpm
 *.h.gch
 *.a
+libft.a
 cub3D_map_tester/

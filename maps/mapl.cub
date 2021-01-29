@@ -1,12 +1,12 @@
 
  R 1280 720
 
-NO ./textures/zwood.xpm
-SO ./textures/zstone.xpm
-WE ./textures/zbrick.xpm
-EA ./textures/zbox.xpm
+NO ./textures/l1.xpm
+SO ./textures/l2.xpm
+WE ./textures/l3.xpm
+EA ./textures/l4.xpm
 
-S ./textures/zspider.xpm
+S ./textures/lteemo.xpm
 F 188,136,92
 C 68,206,235
 
