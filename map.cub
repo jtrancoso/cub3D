@@ -6,7 +6,7 @@ SO ./textures/zstone.xpm
 WE ./textures/zbrick.xpm
 EA ./textures/zbox.xpm
 
-S ./textures/zbones.xpm
+S ./textures/zspider.xpm
 F 188,136,92
 C 68,206,235
 
