@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 12:08:23 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/26 12:11:39 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/02 12:17:59 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 
 void	init_data(t_data *data)
 {
+	data->bmp.screenshot = 0;
 	data->screen_height = -1;
 	data->screen_width = -1;
 	data->map_height = 0;
 	data->map_width = 0;
+	data->map.inmap = 0;
 	data->textures.east.height = -1;
 	data->textures.north.height = -1;
 	data->textures.south.height = -1;

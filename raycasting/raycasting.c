@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 13:49:09 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/28 11:22:55 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/02 10:40:26 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,8 @@ int		raycasting(t_data *data)
 	assign_sprite(data);
 	sort_sprites(data);
 	draw_sprite(data);
-	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
+	if (data->bmp.screenshot != 1)
+		mlx_put_image_to_window(data->mlx, data->win,
+		data->img.img, 0, 0);
 	return (0);
 }

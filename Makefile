@@ -6,7 +6,7 @@
 #    By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/26 11:10:51 by jtrancos          #+#    #+#              #
-#    Updated: 2021/01/28 12:47:54 by jtrancos         ###   ########.fr        #
+#    Updated: 2021/02/02 17:20:59 by jtrancos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,14 +27,15 @@ SRCS		=	cub3d.c\
 				./movement/movement.c\
 				./movement/rotation.c\
 				./events/events.c\
-				./utils/handle_error.c\
-				./utils/colour_error.c\
-				./utils/player_error.c\
-				./utils/file_error.c\
-				./utils/map_error.c\
-				./utils/res_error.c\
-				./utils/tex_error.c\
+				./utils/handle_errors/handle_error.c\
+				./utils/handle_errors/colour_error.c\
+				./utils/handle_errors/player_error.c\
+				./utils/handle_errors/file_error.c\
+				./utils/handle_errors/map_error.c\
+				./utils/handle_errors/res_error.c\
+				./utils/handle_errors/tex_error.c\
 				./utils/utils.c\
+				./screenshot/create_bmp.c\
 
 
 OBJS		= ${SRCS:.c=.o}
@@ -50,7 +51,7 @@ LIBS		= -Lmlx_linux
 
 
 
-.c. -lfto:
+.c.o:
 			${CC} -g -c $< -o ${<:.c=.o}
 			#gcc -o $@ -c $< $(CFLAGS)
 
@@ -60,7 +61,7 @@ ${NAME}:	${OBJS}
 			${MAKE} -C ./libft
 			mv ./mlx/libmlx.a .
 			mv ./libft/libft.a .
-			${CC} -g -o ${NAME} ${OBJS} ${FRAMEWORK}
+			${CC} -fsanitize=address -g -o ${NAME} ${OBJS} ${FRAMEWORK}
 			#${CC} -fsanitize=address -g -o ${NAME} ${OBJS} ${FRAMEWORK}
 			#COMPILAR LINUX ${CC} -fsanitize=address ${LIBS} -o $(NAME) ${OBJS} ${FRAMEWORK}
 

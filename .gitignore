@@ -11,3 +11,5 @@ test.xpm
 *.a
 libft.a
 cub3D_map_tester/
+*.bmp
+mapgen/

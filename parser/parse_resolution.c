@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/11 13:17:59 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/26 10:49:51 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/02 11:53:51 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int		parse_resolution(t_data *data, char *line)
 		i++;
 	if (ft_isdigit(line[i]) == 0)
 		return (handle_error(data, 3));
+	if (data->screen_height != -1 || data->screen_width != -1)
+		return (handle_error(data, 25));
 	data->screen_width = ft_atoi(&line[i]);
 	while (ft_isdigit(line[i]))
 		i++;

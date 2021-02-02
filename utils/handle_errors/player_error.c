@@ -1,32 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   file_error.c                                       :+:      :+:    :+:   */
+/*   player_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/28 11:35:24 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/28 11:35:32 by jtrancos         ###   ########.fr       */
+/*   Created: 2021/01/28 11:32:26 by jtrancos          #+#    #+#             */
+/*   Updated: 2021/02/01 11:33:12 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cub3d.h"
+#include "../../cub3d.h"
 
-int	file_error(t_data *data, int type)
+int	player_error(t_data *data, int type)
 {
-	if (type == 0)
+	if (type == 18)
 	{
-		write(1, "Error\nCould not open file.\n", 27);
+		write(1, "Error\nCould not find a player.\n", 31);
 		return (0);
 	}
-	else if (type == 1)
+	if (type == 19)
 	{
-		write(1, "Error\nInvalid file extension.\n", 30);
-		return (0);
-	}
-	else if (type == 2)
-	{
-		write(1, "Error\nCould not close file.\n", 28);
+		write(1, "Error\nDuplicated player.\n", 25);
 		return (0);
 	}
 	return (0);

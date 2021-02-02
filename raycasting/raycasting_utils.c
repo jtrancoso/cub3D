@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 12:22:59 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/28 11:24:50 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/01 15:48:58 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
+	if (x < 0 || x >= data->screen_width || y < 0 || y >= data->screen_height)
+		return ;
 	data->img.addr[y * data->screen_width + x] = color;
 }
 

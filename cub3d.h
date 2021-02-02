@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 11:43:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/28 12:47:43 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/02 16:43:26 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,14 @@ typedef struct		s_map
 	char			**map;
 	int				height;
 	int				width;
+	int				inmap;
+	int				barra_n;
 }					t_map;
 
 typedef struct		s_colour
 {
-	int			floor[3];
-	int			sky[3];
+	int				floor[3];
+	int				sky[3];
 	int				b;
 }					t_colour;
 
@@ -143,6 +145,13 @@ typedef struct		s_sprite
 	int				d;
 }					t_sprite;
 
+typedef struct		s_bmp
+{
+	char			bmpheader[14];
+	char			bmpinfo[40];
+	int				screenshot;
+}					t_bmp;
+
 typedef struct		s_data
 {
 	void			*mlx;
@@ -165,6 +174,7 @@ typedef struct		s_data
 	t_sprite		*sprite;
 	t_map			map;
 	t_colour		colour;
+	t_bmp			bmp;
 }					t_data;
 
 int					ft_isspace(int c);
@@ -203,5 +213,7 @@ void				draw_sprite(t_data *data);
 int					raycasting(t_data *data);
 void				print_sky_wall_floor(t_data *data, int x);
 int					rgb_to_hex(int colour[3]);
+int					create_bmp(t_data *data);
+int					check_args(t_data *data, int argc, char **argv);
 
 #endif

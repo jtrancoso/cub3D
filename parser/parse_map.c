@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 10:56:26 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/26 10:49:54 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/02 17:14:45 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,20 @@ int	check_map_line(t_data *data, char *line, int *i)
 		j++;
 	if (ft_isdigit(line[j]))
 	{
+		if (data->map.inmap && data->map.barra_n)
+			return (handle_error(data, 17));
+		data->map.inmap = 1;
 		if (!(fill_map(data, line, *i)))
 		{
 			free(line);
 			return (0);
 		}
 		*i += 1;
+	}
+	else
+	{
+		if (data->map.inmap)
+			data->map.barra_n = 1;
 	}
 	return (1);
 }
