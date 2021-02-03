@@ -6,13 +6,13 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 13:49:09 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/02 10:40:26 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:42:09 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-void	set_walls_side(t_data *data, int x)
+void	set_walls_side(t_data *data)
 {
 	if (data->ray.side == 0)
 		data->ray.perpwalldist = (data->ray.map_x - data->player.x +
@@ -38,7 +38,7 @@ void	set_walls_side(t_data *data, int x)
 		data->wall.draw_end = data->screen_height - 1;
 }
 
-void	find_walls(t_data *data, int x)
+void	find_walls(t_data *data)
 {
 	while (data->ray.hit == 0)
 	{
@@ -59,7 +59,7 @@ void	find_walls(t_data *data, int x)
 	}
 }
 
-void	calculate_steps(t_data *data, int x)
+void	calculate_steps(t_data *data)
 {
 	if (data->ray.dir_x < 0)
 	{
@@ -112,17 +112,15 @@ void	set_raycasting(t_data *data, int x)
 int		raycasting(t_data *data)
 {
 	int x;
-	int color;
-	int tex_y;
 
 	x = 0;
 	move_player(data);
 	while (x < data->screen_width)
 	{
 		set_raycasting(data, x);
-		calculate_steps(data, x);
-		find_walls(data, x);
-		set_walls_side(data, x);
+		calculate_steps(data);
+		find_walls(data);
+		set_walls_side(data);
 		print_sky_wall_floor(data, x);
 		data->zbuffer[x] = data->ray.perpwalldist;
 		x++;

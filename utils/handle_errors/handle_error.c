@@ -6,13 +6,13 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 12:25:08 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/02 11:53:27 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:47:07 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cub3d.h"
 
-int	misc_error(t_data *data, int type)
+int	misc_error(int type)
 {
 	if (type == 20)
 	{
@@ -37,7 +37,7 @@ int	misc_error(t_data *data, int type)
 	return (0);
 }
 
-int	args_error(t_data *data, int type)
+int	args_error(int type)
 {
 	if (type == 23)
 	{
@@ -52,23 +52,23 @@ int	args_error(t_data *data, int type)
 	return (0);
 }
 
-int	handle_error(t_data *data, int type)
+int	handle_error(int type)
 {
 	if (type >= 0 && type <= 2)
-		return (file_error(data, type));
+		return (file_error(type));
 	if (type == 3 || type == 4 || type == 25)
-		return (res_error(data, type));
+		return (res_error(type));
 	if (type >= 5 && type < 9)
-		return (tex_error(data, type));
+		return (tex_error(type));
 	if (type >= 10 && type <= 13)
-		return (colour_error(data, type));
+		return (colour_error(type));
 	if (type >= 14 && type <= 17)
-		return (map_error(data, type));
+		return (map_error(type));
 	if (type == 18 || type == 19)
-		return (player_error(data, type));
+		return (player_error(type));
 	if (type == 20 || type == 9 || type == 21 || type == 22)
-		return (misc_error(data, type));
+		return (misc_error(type));
 	if (type == 23 || type == 24)
-		return (args_error(data, type));
+		return (args_error(type));
 	return (0);
 }

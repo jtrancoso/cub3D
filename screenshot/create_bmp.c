@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 13:46:40 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/02 10:57:20 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:52:03 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void		set_bmpheader(t_data *data, int file_size)
 	data->bmp.bmpheader[10] = 54;
 }
 
-void		set_bmpinfo(t_data *data, int file_size)
+void		set_bmpinfo(t_data *data)
 {
 	ft_bzero(data->bmp.bmpinfo, 40);
 	data->bmp.bmpinfo[0] = 40;
@@ -48,18 +48,18 @@ int			write_bmp(t_data *data, int fd, unsigned int *addr, int i)
 	file_size = 54 + data->screen_width * data->screen_height *
 	(data->img.bpp / 8);
 	set_bmpheader(data, file_size);
-	set_bmpinfo(data, file_size);
+	set_bmpinfo(data);
 	if (!write(fd, data->bmp.bmpheader, 14))
-		return (handle_error(data, 21));
+		return (handle_error(21));
 	if (!write(fd, data->bmp.bmpinfo, 40))
-		return (handle_error(data, 21));
+		return (handle_error(21));
 	while (i >= 0)
 	{
 		j = 0;
 		while (j < data->screen_width)
 		{
 			if (!write(fd, &addr[i * data->screen_width + j], 4))
-				return (handle_error(data, 21));
+				return (handle_error(21));
 			j++;
 		}
 		i--;
@@ -71,18 +71,17 @@ int			create_bmp(t_data *data)
 {
 	int				fd;
 	int				i;
-	int				j;
 	unsigned int	*addr;
 
 	fd = open("screenshot.bmp", O_WRONLY | O_CREAT, 0777 | O_APPEND);
 	if (fd == -1)
-		return (handle_error(data, 21));
+		return (handle_error(21));
 	raycasting(data);
 	addr = (unsigned int *)data->img.addr;
 	i = data->screen_height - 1;
 	if (!write_bmp(data, fd, addr, i))
-		return (handle_error(data, 21));
+		return (handle_error(21));
 	if (close(fd) == -1)
-		return (handle_error(data, 22));
+		return (handle_error(22));
 	return (1);
 }

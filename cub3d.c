@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 10:25:56 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/02 17:14:20 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:50:25 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	main(int argc, char **argv)
 	if (!create_bmp(&data))
 	{
 		mlx_destroy_image(data.mlx, data.img.img);
-		return (handle_error(&data, 21));
+		return (handle_error(21));
 	}
 	return (0);
 }

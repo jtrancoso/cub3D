@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 12:08:23 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/02 18:27:30 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:33:59 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	flood_fill(t_data *data, int x, int y, int prev_number)
 		return ;
 	if (data->map.map[y][x] != prev_number)
 		return ;
+	ft_isdigit(data->screen_height);
 	data->map.map[y][x] = '9';
 	flood_fill(data, x + 1, y, prev_number);
 	flood_fill(data, x - 1, y, prev_number);

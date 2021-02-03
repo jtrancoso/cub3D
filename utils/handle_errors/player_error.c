@@ -6,13 +6,13 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:32:26 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/01 11:33:12 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:47:06 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cub3d.h"
 
-int	player_error(t_data *data, int type)
+int	player_error(int type)
 {
 	if (type == 18)
 	{

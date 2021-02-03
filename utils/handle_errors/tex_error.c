@@ -6,13 +6,13 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:33:33 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/01 11:33:01 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:47:03 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cub3d.h"
 
-int	tex_error(t_data *data, int type)
+int	tex_error(int type)
 {
 	if (type == 5)
 	{

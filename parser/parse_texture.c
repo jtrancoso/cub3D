@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/11 13:19:08 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/01/26 10:49:46 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:50:01 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	check_texture_init(t_data *data, int type)
 int	get_texture_path(t_data *data, int type, char *line)
 {
 	if (!check_texture_init(data, type))
-		return (handle_error(data, 6));
+		return (handle_error(6));
 	if (type == 1)
 		data->textures.north.path = ft_strtrim(line, " ");
 	else if (type == 2)
@@ -51,12 +51,12 @@ int	get_texture(t_data *data, t_texture *texture, char *path)
 	if ((fd = open(path, O_RDONLY)) == -1)
 	{
 		close(fd);
-		return (handle_error(data, 8));
+		return (handle_error(8));
 	}
 	texture->img.img = mlx_xpm_file_to_image(data->mlx, path,
 						&texture->width, &texture->height);
 	if (!texture->img.img)
-		return (handle_error(data, 7));
+		return (handle_error(7));
 	if (!(texture->img.addr = (int *)mlx_get_data_addr(texture->img.img,
 		&texture->img.bpp, &texture->img.line_len, &texture->img.endian)))
 		return (0);
@@ -93,11 +93,11 @@ int	parse_texture(t_data *data, int type, char *line)
 	else
 		i = 2;
 	if (!ft_isspace(line[i]))
-		return (handle_error(data, 5));
+		return (handle_error(5));
 	while (ft_isspace(line[i]))
 		i++;
 	if (!ft_isascii(line[i]))
-		return (handle_error(data, 5));
+		return (handle_error(5));
 	if (!get_texture_path(data, type, &line[i]))
 		return (0);
 	if (!assign_texture(data, type))

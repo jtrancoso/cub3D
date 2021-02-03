@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/07 14:41:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/02 17:10:36 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:53:02 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	find_texture(t_data *data, char *line)
 		return (parse_texture(data, 4, &line[i]));
 	else if (line[i] == 'S')
 		return (parse_texture(data, 5, &line[i]));
-	return (handle_error(data, 9));
+	return (handle_error(9));
 }
 
 int	check_line(t_data *data, char *line)
@@ -51,7 +51,7 @@ int	check_line(t_data *data, char *line)
 		return (parse_colour(data, 2, line + i, i));
 	else if (ft_strchr("012", line[i]) || ft_isspace(line[i]))
 		return (map_count(data, line + i));
-	return (handle_error(data, 20));
+	return (handle_error(20));
 }
 
 int	check_file(t_data *data, const char *file, int fd)
@@ -60,7 +60,7 @@ int	check_file(t_data *data, const char *file, int fd)
 	char	*line;
 	int		correct_line;
 
-	if (!check_extension(data, file, ".cub"))
+	if (!check_extension(file, ".cub"))
 		return (0);
 	while ((ret = get_next_line(fd, &line) > 0))
 	{
@@ -85,7 +85,7 @@ int	check_map(t_data *data)
 	{
 		if (data->map.map[0][i] == '9' ||
 			data->map.map[data->map_height - 1][i] == '9')
-			return (handle_error(data, 15));
+			return (handle_error(15));
 		i++;
 	}
 	i = 0;
@@ -93,7 +93,7 @@ int	check_map(t_data *data)
 	{
 		if (data->map.map[i][0] == '9' ||
 			data->map.map[i][data->map_width - 1] == '9')
-			return (handle_error(data, 16));
+			return (handle_error(16));
 		i++;
 	}
 	return (1);
@@ -106,13 +106,13 @@ int	read_file(t_data *data, const char *file)
 
 	init_data(data);
 	if ((fd = open(file, O_RDONLY)) == -1)
-		return (handle_error(data, 0));
+		return (handle_error(0));
 	if (!check_file(data, file, fd))
 		return (0);
 	if (close(fd) == -1)
-		return (handle_error(data, 2));
+		return (handle_error(2));
 	if ((fd = open(file, O_RDONLY)) == -1)
-		return (handle_error(data, 0));
+		return (handle_error(0));
 	if (!parse_map(data, fd))
 		return (0);
 	flood_fill(data, data->player.y, data->player.x, '0');

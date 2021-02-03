@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 11:43:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/02 16:43:26 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:51:19 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,14 +190,14 @@ int					parse_map(t_data *data, int fd);
 void				flood_fill(t_data *data, int x, int y, int prev_number);
 int					check_player(t_data *data, char *line, int y);
 void				convert_map(t_data *data);
-int					handle_error(t_data *data, int type);
-int					colour_error(t_data *data, int type);
-int					map_error(t_data *data, int type);
-int					player_error(t_data *data, int type);
-int					tex_error(t_data *data, int type);
-int					res_error(t_data *data, int type);
-int					file_error(t_data *data, int type);
-int					check_extension(t_data *data, const char *file, char *ext);
+int					handle_error(int type);
+int					colour_error(int type);
+int					map_error(int type);
+int					player_error(int type);
+int					tex_error(int type);
+int					res_error(int type);
+int					file_error(int type);
+int					check_extension(const char *file, char *ext);
 void				my_mlx_pixel_put(t_data *data, int x, int y, int color);
 void				assign_sprite(t_data *data);
 void				sort_sprites(t_data *data);

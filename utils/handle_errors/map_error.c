@@ -6,13 +6,13 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:31:46 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/02 11:29:42 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:47:07 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cub3d.h"
 
-int	map_error(t_data *data, int type)
+int	map_error(int type)
 {
 	if (type == 14)
 	{

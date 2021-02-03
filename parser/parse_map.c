@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 10:56:26 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/02 17:14:45 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/03 10:49:46 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	map_count(t_data *data, char *line)
 	int line_len;
 
 	if (!check_data(data))
-		return (handle_error(data, 17));
+		return (handle_error(17));
 	line_len = ft_strlen(line);
 	if (data->map_width < line_len)
 		data->map_width = line_len;
@@ -33,7 +33,7 @@ int	fill_map(t_data *data, char *line, int i)
 	while (line[j] != '\0')
 	{
 		if (!ft_strchr(" NSEW012", line[j]))
-			return (handle_error(data, 14));
+			return (handle_error(14));
 		if (line[j] == '2')
 			data->sprite_num += 1;
 		if (line[j] == ' ')
@@ -57,7 +57,7 @@ int	check_map_line(t_data *data, char *line, int *i)
 	if (ft_isdigit(line[j]))
 	{
 		if (data->map.inmap && data->map.barra_n)
-			return (handle_error(data, 17));
+			return (handle_error(17));
 		data->map.inmap = 1;
 		if (!(fill_map(data, line, *i)))
 		{
@@ -119,6 +119,6 @@ int	parse_map(t_data *data, int fd)
 		return (0);
 	free(line);
 	if (data->player.x == -1 || data->player.y == -1)
-		return (handle_error(data, 18));
+		return (handle_error(18));
 	return (1);
 }
