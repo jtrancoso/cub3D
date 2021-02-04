@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 12:08:23 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/03 10:33:59 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/04 11:48:16 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 void	init_data(t_data *data)
 {
 	data->bmp.screenshot = 0;
-	data->screen_height = -1;
-	data->screen_width = -1;
+	data->screen_height = -2;
+	data->screen_width = -2;
 	data->map_height = 0;
 	data->map_width = 0;
 	data->map.inmap = 0;
@@ -40,10 +40,14 @@ void	flood_fill(t_data *data, int x, int y, int prev_number)
 {
 	if (x < 0 || x >= data->map_width || y < 0 || y >= data->map_height)
 		return ;
-	if (data->map.map[y][x] != prev_number)
+	if (data->map.map[y][x] != prev_number &&
+		!ft_strchr("2", data->map.map[y][x]))
 		return ;
 	ft_isdigit(data->screen_height);
-	data->map.map[y][x] = '9';
+	if (data->map.map[y][x] == '2')
+		data->map.map[y][x] = '8';
+	else
+		data->map.map[y][x] = '9';
 	flood_fill(data, x + 1, y, prev_number);
 	flood_fill(data, x - 1, y, prev_number);
 	flood_fill(data, x, y + 1, prev_number);
@@ -79,8 +83,9 @@ void	convert_map(t_data *data)
 		{
 			if (data->map.map[i][j] == '9')
 				data->map.map[i][j] = '0';
-			if (data->map.map[i][j] == '2')
+			if (data->map.map[i][j] == '8')
 			{
+				data->map.map[i][j] = '2';
 				sprite.map_x = i + 0.5;
 				sprite.map_y = j + 0.5;
 				data->sprite[queonda++] = sprite;

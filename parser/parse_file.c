@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/07 14:41:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2021/02/03 10:53:02 by jtrancos         ###   ########.fr       */
+/*   Updated: 2021/02/04 11:49:23 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,18 @@ int	check_map(t_data *data)
 	i = 0;
 	while (i < data->map_width)
 	{
-		if (data->map.map[0][i] == '9' ||
-			data->map.map[data->map_height - 1][i] == '9')
+		if (data->map.map[0][i] == '9' || data->map.map[data->map_height - 1][i]
+			== '9' || data->map.map[0][i] == '8' ||
+			data->map.map[data->map_height - 1][i] == '8')
 			return (handle_error(15));
 		i++;
 	}
 	i = 0;
 	while (i < data->map_height)
 	{
-		if (data->map.map[i][0] == '9' ||
-			data->map.map[i][data->map_width - 1] == '9')
+		if (data->map.map[i][0] == '9' || data->map.map[i][data->map_width - 1]
+			== '9' || data->map.map[i][0] == '8' ||
+			data->map.map[i][data->map_width - 1] == '8')
 			return (handle_error(16));
 		i++;
 	}
